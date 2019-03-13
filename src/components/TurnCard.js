@@ -10,9 +10,9 @@ import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import CheckboxListSecondary from './SentenceCard'
+import SentencesList from './SentencesList'
+import SentenceCard from './SentenceCard'
 
 const styles = theme => ({
   card: {
@@ -46,14 +46,6 @@ class TurnCard extends React.Component {
 
     return (
       <Card className={classes.card}>
-        <CardHeader
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Sentence title"
-        />
         <CardContent>
           <Typography component="p">
             Body of the sentence. If we expend this card we might find
@@ -74,7 +66,8 @@ class TurnCard extends React.Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <CheckboxListSecondary/>
+            <SentenceCard/>
+            <SentencesList/>
           </CardContent>
         </Collapse>
       </Card>

@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 
 class App extends Component {
+  
   render() {
+
+    const style = {
+      backgroundColor: 'white',
+      fonr: 'inherite',
+      border: '1px solid blue',
+      padding: '8px',
+      cursor: 'pointer'
+    };
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className ='App'>
+      <PersistentDrawerLeft/>
+        <h1>Hi I'm a React App</h1>
+        <p>This is a paragraph</p>
+        <button
+          style={style}>I'm a button 
+        </button>
       </div>
     );
   }

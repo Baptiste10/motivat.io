@@ -7,7 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
-import SentenceCard from './SentenceCard'
+import TurnCard from './TurnCard'
 
 function TabContainer({ children, dir }) {
   return (
@@ -25,7 +25,7 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
+    width: "100%",
   },
 });
 
@@ -65,10 +65,16 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            <SentenceCard/>
+            <TurnCard/>
+            <TurnCard/>
+            <TurnCard/>
+            <TurnCard/>
           </TabContainer>
           <TabContainer dir={theme.direction}>
-            <SentenceCard/>
+            <TurnCard/>
+            <TurnCard/>
+            <TurnCard/>
+            <TurnCard/>
           </TabContainer>
         </SwipeableViews>
       </div>

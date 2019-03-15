@@ -1,16 +1,36 @@
 // Server
-import express from 'express'
+const express = require('express')
 
-import DatabaseManager from './databaseManager'
+let mongoose = require('mongoose');
+const Transcripts = require('./models/transcriptSchema.js')
 
-const db = DatabaseManager();
+const SERVER = '127.0.0.1:27017'; // DB SERVER
+const DATABASE = 'mydatabase';    // DB NAME
 
-const app = express();
+//Set up mongoose connection
+mongoose.connect(`mongodb://${SERVER}/${DATABASE}`, { useNewUrlParser: true })
+// mongoose.Promise = global.Promise;
+let db = mongoose.connection;
 
-app.get('/', (req, res) => {
-    res.send('hello')
-});
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000.')
+db.once('open', () => {
+    const app = express();
+
+    app.get('/', (req, res) => {
+        Transcripts.find(function(err, docs) {
+            console.log(docs);
+            res.send('done');
+        })
+    });
+    
+    // Potential useful methods to use:
+    // res.download()	Prompt a file to be downloaded: to get the ArgDown
+    // res.json()	Send a JSON response: for the sentences from the db
+    
+    
+    app.listen(3000, () => {
+        console.log('Listening on port 3000.')
+    })
 })
+

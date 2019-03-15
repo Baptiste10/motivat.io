@@ -8,6 +8,8 @@
     "@material-ui/styles": "^3.0.0-alpha.10",
     "classnames": "^2.2.6",
     "contentful": "^7.4.1",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.19",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-scripts": "2.1.8",

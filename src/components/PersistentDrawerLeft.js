@@ -19,6 +19,8 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import FullWidthTabs from './OwnersTabs'
 
+import './drawer.css'
+
 const drawerWidth = 400;
 
 const styles = theme => ({
@@ -160,15 +162,16 @@ class PersistentDrawerLeft extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Persistent drawer
+              Motivat.io
             </Typography>
           </Toolbar>
         </AppBar>
-        <Drawer
+       <Drawer 
           className={classes.drawer}
           variant="persistent"
           anchor="left"
           open={open}
+          id={'drawer-fixed'}
           classes={{
             paper: classes.drawerPaper,
           }}
@@ -189,9 +192,10 @@ class PersistentDrawerLeft extends React.Component {
             <IconButton onClick={this.handleDrawerClose}>
               {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
+            <Divider />
           </div>
           
-          <Divider />
+          
 
           <FullWidthTabs/>
 

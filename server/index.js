@@ -2,6 +2,7 @@
 const express = require('express')
 
 let mongoose = require('mongoose');
+var ObjectId = require('mongoose').Types.ObjectId; 
 
 const SERVER = '127.0.0.1:27017'; // DB SERVER
 const DATABASE = 'mydatabase';    // DB NAME
@@ -22,10 +23,10 @@ var Clauses = mongoose.model("Clauses", new Schema({}), "Clauses");
 db.once('open', () => {
     const app = express();
 
-    app.get('/', (req, res) => {
-        Transcripts.find(function(err, docs) {
-            console.log(docs);
-            res.send('done');
+    app.get('/home', (req, res) => {
+        Transcripts.find({}, function(err, docs) {
+          console.log(project);
+          res.send(project);
         })
     });
     
@@ -39,3 +40,38 @@ db.once('open', () => {
     })
 })
 
+// Find all the transcript names
+// execQuery(Transcripts, {}, 'name');
+
+// FInd the the transcript id from its transcript name
+// execQuery(Transcripts, {name: 'DT'}, '_id');
+
+
+
+// Convert Objects returned by Mongo into a list of the desired items
+function docToList(docs, project) {
+  var results = [];
+  for (element of docs) {
+    results.push(element[project]);
+  }
+  console.log(results)
+}
+
+// Execute a query
+function execQuery(collectionName, match, project) {
+  let query = myQuery(collectionName, match, project)
+  query.exec()
+  .then(results => {
+    docToList(results, project)
+  })
+  .catch(err => {
+    console.error(err);
+  })
+}
+
+// Build Query
+function myQuery(collectionName, match, project) {
+  let query = collectionName.find(match).lean();
+  query.select(project);
+  return query;
+};

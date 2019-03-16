@@ -13,15 +13,17 @@ let db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const Transcripts = require('./models/transcriptSchema.js')
-const Kitten = require('./models/kittenSchema.js')
-const Sentences = require('./models/sentenceSchema.js')
+// Collection Schemas and models
+Schema = mongoose.Schema;
+var Transcripts = mongoose.model("Transcripts", new Schema({}), "Transcripts");
+var Sentences = mongoose.model("Sentences", new Schema({}), "Sentences");
+var Clauses = mongoose.model("Clauses", new Schema({}), "Clauses");
 
 db.once('open', () => {
     const app = express();
 
     app.get('/', (req, res) => {
-        Sentences.find(function(err, docs) {
+        Transcripts.find(function(err, docs) {
             console.log(docs);
             res.send('done');
         })

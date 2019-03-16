@@ -1,16 +1,17 @@
 let mongoose = require('mongoose')
 var ObjectId = mongoose.Schema.Types.ObjectId;
+var Mixed = mongoose.Schema.Types.Mixed;
 
 var tagSchema = new mongoose.Schema({
-  PERSON: Array,
-  DATE: Array,
-  ORG: Array,
-  TIME: Array
+  PERSON: [],
+  DATE: [],
+  ORG: [],
+  TIME: []
 });
 
 var ownersSchema = new mongoose.Schema({
-  coach: Array,
-  client: Array
+  coach: [],
+  client: []
 });
 
 var transcriptSchema = new mongoose.Schema({
@@ -18,8 +19,8 @@ var transcriptSchema = new mongoose.Schema({
   name: String,
   path: String,
   tags: [tagSchema],
-  coach_keywords: Array,
-  client_keywords: Array,
+  coach_keywords: [],
+  client_keywords: [],
   owners: [ownersSchema]
 });
 

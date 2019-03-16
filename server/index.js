@@ -2,7 +2,6 @@
 const express = require('express')
 
 let mongoose = require('mongoose');
-const Transcripts = require('./models/transcriptSchema.js')
 
 const SERVER = '127.0.0.1:27017'; // DB SERVER
 const DATABASE = 'mydatabase';    // DB NAME
@@ -14,11 +13,15 @@ let db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+const Transcripts = require('./models/transcriptSchema.js')
+const Kitten = require('./models/kittenSchema.js')
+const Sentences = require('./models/sentenceSchema.js')
+
 db.once('open', () => {
     const app = express();
 
     app.get('/', (req, res) => {
-        Transcripts.find(function(err, docs) {
+        Sentences.find(function(err, docs) {
             console.log(docs);
             res.send('done');
         })

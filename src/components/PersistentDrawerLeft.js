@@ -18,6 +18,8 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import FullWidthTabs from './OwnersTabs'
+import fetch from 'isomorphic-fetch'
+
 
 import './drawer.css'
 
@@ -186,6 +188,21 @@ class PersistentDrawerLeft extends React.Component {
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
+                }}
+                onChange={e => {
+                  let text = e.target.value;
+                  text = text.split(' ').join('_');
+                  fetch('http://localhost:3001/search/'+text, {mode:'no-cors'}).then(res => {
+                    if (res.status >= 400) {
+                      throw new Error("Bad response from server");
+                    }
+                    console.log(res)
+                    return res.json()
+                  }).then(res => {
+                    console.log(res)
+                  }).catch(err => {
+                      console.error(err.message);
+                  })
                 }}
             />
           </div>

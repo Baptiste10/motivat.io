@@ -55,6 +55,6 @@ class Database {
 
 
 let mongo = new Database();
-mongo.execQuery(mongo.Clauses, {transcript: ObjectId('5c8ce77e81a7c3221c80f862'), owner: ObjectId('5c8ce77e81a7c3221c80f860'), tense:'pres'}, 'text').then(console.log)
+try{mongo.execQuery(mongo.Clauses, {transcript: ObjectId("5c8ce77e81a7c3221c80f862"), owner: ObjectId("5c8ce77e81a7c3221c80f861"), tags: 'PERSON' }, 'text').then(console.log)} catch(error) {console.log(error)}
 
 module.exports = Database;

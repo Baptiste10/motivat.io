@@ -20,9 +20,6 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import FullWidthTabs from './OwnersTabs'
 import fetch from 'isomorphic-fetch'
 
-
-import './drawer.css'
-
 const drawerWidth = 400;
 
 const styles = theme => ({

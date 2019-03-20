@@ -1,4 +1,5 @@
 async function MongoStitch() {
+  const BSON = require('bson');
   const {
           Stitch,
           RemoteMongoClient,
@@ -36,16 +37,17 @@ async function MongoStitch() {
     return transcriptsName
   };
 
-/*
   async function getTranscriptId(transcriptName){
     const query = {'name': transcriptName};
     const project = "_id";
     const options = {"projection": {_id: 1}};
     const docs = await findInDb(Transcripts, query, options );
-    const transcriptsId = await docToArray(docs, project);
-    return transcriptsId
+    const transcriptId = await docToArray(docs, project);
+    console.log('TR ID FOUND: ', transcriptId[0].toString())
+    return transcriptId[0].toString()
   };
 
+/*
   async function getTranscriptOwners(transcriptId){
     const query = {'_id': transcriptName};
     const project = "name";
@@ -64,7 +66,7 @@ async function MongoStitch() {
     return results;
   };
 
-  return getAllTranscripts();
+  return getTranscriptId('Monday 6th July');
 
 }
 

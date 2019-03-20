@@ -8,8 +8,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import SimpleDialogStyle from './SimpleDialogStyle.css'
-import MongoStitch from '../../StitchApp/MongoStitch'
-
 
 
 function UploadButton() {
@@ -68,7 +66,6 @@ SimpleDialog.propTypes = {
 };
 
 function SimpleDialogDemo(props) {
-  const {transcriptName} = props;
   const [open, setOpen] = React.useState(false);
 
   function handleClickOpen() {

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 
 import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import SimpleDialogDemo from './components/ChooseOption/SimpleDialog'
+import MongoStitch from './StitchApp/MongoStitch'
+
 
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      transcriptId: null,
+      setTranscriptId: null,
       setSelectedTranscript: 'No transcript picked'
     };
 
@@ -18,8 +19,13 @@ class App extends Component {
   }
 
   handleClose = value => {
-    this.setState({selectedTranscript: value});
+    this.setState({
+      selectedTranscript: value,
+      setTranscriptId: MongoStitch()
+    });
   };
+
+
   
   
   render() {

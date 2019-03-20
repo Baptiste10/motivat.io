@@ -8,6 +8,7 @@
     "@material-ui/styles": "^3.0.0-alpha.10",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
+    "bson": "^4.0.2",
     "classnames": "^2.2.6",
     "contentful": "^7.4.1",
     "express": "^4.16.4",

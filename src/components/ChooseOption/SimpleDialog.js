@@ -8,8 +8,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import SimpleDialogStyle from './SimpleDialogStyle.css'
+import MongoStitch from '../../StitchApp/MongoStitch'
 
-const emails = ['username@gmail.com', 'user02@gmail.com', 'anotherone@gmail.com'];
+
 
 function UploadButton() {
   return (
@@ -32,6 +33,7 @@ function UploadButton() {
 
 function SimpleDialog(props) {
   const { onClose, selectedValue, ...other } = props;
+  const transcriptNames = ["Sunday 34th February", "Friday 23 April", "Monday 6th July", "Tuesday 30th February"];
 
   function handleClose() {
     onClose(selectedValue);
@@ -46,9 +48,9 @@ function SimpleDialog(props) {
       <DialogTitle id="simple-dialog-title">Set the transcript to analyse</DialogTitle>
       <div>
         <List>
-          {emails.map(email => (
-            <ListItem button onClick={() => handleListItemClick(email)} key={email}>
-              <ListItemText primary={email} />
+          {transcriptNames.map(transcriptName => (
+            <ListItem button onClick={() => handleListItemClick(transcriptName)} key={transcriptName}>
+              <ListItemText primary={transcriptName} />
             </ListItem>
           ))}
           <ListItem>
@@ -65,9 +67,9 @@ SimpleDialog.propTypes = {
   selectedValue: PropTypes.string,
 };
 
-function SimpleDialogDemo() {
-  const [open, setOpen, intervalIsSet] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState('No transcript selected');
+function SimpleDialogDemo(props) {
+  const {transcriptName} = props;
+  const [open, setOpen] = React.useState(false);
 
   function handleClickOpen() {
     setOpen(true);
@@ -75,34 +77,18 @@ function SimpleDialogDemo() {
 
   const handleClose = value => {
     setOpen(false);
-    setSelectedValue(value);
-  };
-
-  function componentDidMount() {
-    this.getDataFromDb();
-    if (!this.state.intervalIsSet) {
-      let interval = setInterval(this.getDataFromDb, 1000);
-      this.setState({ intervalIsSet: interval });
-    }
-  };
-
-  // our first get method that uses our backend api to 
-  // fetch data from our data base
-  const getDataFromDb = () => {
-    fetch("http://localhost:3001/api/getData")
-      .then(data => data.json())
-      .then(res => this.setState({ data: res.data }));
+    props.handleClose(value)
   };
 
 
   return (
     <div>
-      <Typography variant="subtitle1">Selected: {selectedValue}</Typography>
+      <Typography variant="subtitle1">Selected: {props.selectedTranscript}</Typography>
       <br />
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Switch to a different transcript
       </Button>
-      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+      <SimpleDialog selectedValue={props.selectedTranscript} open={open} onClose={handleClose} />
     </div>
   );
 }

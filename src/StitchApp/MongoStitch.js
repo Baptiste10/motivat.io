@@ -15,21 +15,58 @@ async function MongoStitch() {
 
   async function findInDb(collectionName, query, options){
     try {
-      const result = await collectionName.findOne(query, options);
+      const result = await collectionName.find(query, options).asArray();
       if(result) {
-        console.log(`Successfully found document: ${result}.`)
+        console.log(`Successfully found document: `,result)
       } else {
         console.log("No document matches the provided query.")
-      } 
+      }
+      return result;
       }catch(e) {
         console.log(e);
       }
-  }
+  };
 
-  const query = {"name": "Monday 6th July"};
-  const options = { "limit": 1 };
-  findInDb(Transcripts, query, options ); 
+  async function getAllTranscripts () {
+    const query = {};
+    const project = "name";
+    const options = {"projection": {name: 1}};
+    const docs = await findInDb(Transcripts, query, options );
+    const transcriptsName = await docToArray(docs, project);
+    return transcriptsName
+  };
+
+/*
+  async function getTranscriptId(transcriptName){
+    const query = {'name': transcriptName};
+    const project = "_id";
+    const options = {"projection": {_id: 1}};
+    const docs = await findInDb(Transcripts, query, options );
+    const transcriptsId = await docToArray(docs, project);
+    return transcriptsId
+  };
+
+  async function getTranscriptOwners(transcriptId){
+    const query = {'_id': transcriptName};
+    const project = "name";
+    const options = {"projection": {_id: 1}};
+    const docs = await findInDb(Transcripts, query, options );
+    const transcriptsId = await docToArray(docs, project);
+    return transcriptsId
+  };
+*/
+
+  function docToArray(docs, project) {
+    var results = [];
+      for (var element of docs) {
+        results.push(element[project]);
+      }
+    return results;
+  };
+
+  return getAllTranscripts();
 
 }
 
-export default MongoStitch
+
+export default MongoStitch;

@@ -4,25 +4,33 @@ import './App.css';
 
 import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import SimpleDialogDemo from './components/ChooseOption/SimpleDialog'
-import MongoStitch from './StitchApp/MongoStitch'
 
-console.log(MongoStitch())
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      transcriptId: null,
+      setSelectedTranscript: 'No transcript picked'
+    };
 
-  state = {
-    persons: [
-        {name: 'Max', age: 28},
-        {name: 'Baptiste', age: 20},
-        {name: 'Antoni', age: 22}
-      ]
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClose = value => {
+    this.setState({selectedTranscript: value});
   };
+  
   
   render() {
     return (
       <div className ='App'>
         <PersistentDrawerLeft/>
-        <SimpleDialogDemo/>
+        <SimpleDialogDemo 
+          selectedTranscript={this.state.selectedTranscript}
+          transcriptId={this.state.transcriptId}
+          handleClose={this.handleClose}
+        />
       </div>
     );
   }

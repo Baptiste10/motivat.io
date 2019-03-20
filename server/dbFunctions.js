@@ -56,15 +56,13 @@ class TranscriptHandler {
 
   // Take an object containing the search parameters
   // Return an array of nodes
-  async searchHandler(searchParameters) {
+  async searchHandler(searchParameters, transcriptId, ownerId) {
     // -----------Declare search parameters ------------
-    let text = searchParameters.split('_').join(' ');
-    let namedEntity = "";
-    let keywords = ""
+    let text = searchParameters;
     let match = {};
     let project = "";
-    match.transcript = ObjectId("5c8ce77e81a7c3221c80f862");
-    match.owner = ObjectId("5c8ce77e81a7c3221c80f861");
+    match.transcript = ObjectId(transcriptId);
+    match.owner = ObjectId(ownerId);
 
     // ------------- Extract hashtags -------------
     

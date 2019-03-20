@@ -5,38 +5,59 @@ import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import SimpleDialogDemo from './components/ChooseOption/SimpleDialog'
 import MongoStitch from './StitchApp/MongoStitch'
 
-
+const db = new MongoStitch();
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      setTranscriptId: null,
-      setSelectedTranscript: 'No transcript picked'
+      TranscriptId: null,
+      setSelectedTranscript: 'No transcript picked',
+      transcriptList: []
     };
 
     this.handleClose = this.handleClose.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
   }
 
   handleClose = value => {
-    this.setState({
-      selectedTranscript: value,
-      setTranscriptId: MongoStitch()
-    });
+    db.getTranscriptId(value).then(
+      val => {
+        this.setState({
+          selectedTranscript: value,
+          transcriptId: val
+        });
+      }
+    )
+    
   };
 
-
+  handleClickOpen = function() {
+    db.getAllTranscripts().then(val => {
+      this.setState({
+        transcriptList: val
+      })
+    })
+  }
   
   
   render() {
+    console.log('Active transcript ID: ', this.state.transcriptId)
+    let transcriptDialog
+    // Render the transcript dialog only if the user hasn't picked any transcript to analyse yet.
+    if(this.state.transcriptId == null) {
+      transcriptDialog = <SimpleDialogDemo 
+        selectedTranscript={this.state.selectedTranscript}
+        transcriptId={this.state.transcriptId}
+        handleClose={this.handleClose}
+        handleClickOpen={this.handleClickOpen}
+        transcriptList={this.state.transcriptList}
+      />
+    }
     return (
       <div className ='App'>
         <PersistentDrawerLeft/>
-        <SimpleDialogDemo 
-          selectedTranscript={this.state.selectedTranscript}
-          transcriptId={this.state.transcriptId}
-          handleClose={this.handleClose}
-        />
+        {transcriptDialog}
       </div>
     );
   }

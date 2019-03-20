@@ -30,8 +30,8 @@ function UploadButton() {
 }
 
 function SimpleDialog(props) {
-  const { onClose, selectedValue, ...other } = props;
-  const transcriptNames = ["Sunday 34th February", "Friday 23 April", "Monday 6th July", "Tuesday 30th February"];
+  const { onClose, selectedValue,transcriptList, ...other } = props;
+  const transcriptNames = transcriptList;
 
   function handleClose() {
     onClose(selectedValue);
@@ -70,6 +70,7 @@ function SimpleDialogDemo(props) {
 
   function handleClickOpen() {
     setOpen(true);
+    props.handleClickOpen();
   }
 
   const handleClose = value => {
@@ -85,7 +86,7 @@ function SimpleDialogDemo(props) {
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Switch to a different transcript
       </Button>
-      <SimpleDialog selectedValue={props.selectedTranscript} open={open} onClose={handleClose} />
+      <SimpleDialog selectedValue={props.selectedTranscript} open={open} onClose={handleClose} transcriptList={props.transcriptList} />
     </div>
   );
 }

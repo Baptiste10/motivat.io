@@ -121,7 +121,7 @@ class TranscriptHandler {
     clausesResult = await this.mongo.execQuery(this.mongo.Clauses, match, project)
     for (let clause of clausesResult) {
       sentence = await this.mongo.execQuery(this.mongo.Sentences, {_id: clause[0]});
-      sentenceTuplesList.push(this.createSentenceJSON(sentence))
+      sentenceTuplesList.push(this.createSentenceNode(sentence))
     }
      return sentenceTuplesList
   }

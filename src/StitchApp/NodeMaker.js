@@ -1,20 +1,24 @@
 // Create the JSON sentence out of its db document
-function createSentenceJSON(sentence, typology="", group="") {
+module.exports = {
+  createSentenceNode : function (sentence, typology="", group="") {
     let node = {
       id: sentence['_id'],
+      turn: sentence['turn'],
       name: sentence['title'],
       text: sentence['text'],
       typology: typology,
       mood: sentence["sentiment"] ? sentence["sentiment"]["mood"] : "",
       group: group,
       title: function() {
+        var opening;
+        var closing;
         if(this.typology==='statement'){
-          let opening = "[";
-          let closing = "]";
+          opening = "[";
+          closing = "]";
         }
         if(this.typology==='argument'){
-          let opening = "<";
-          let closing = ">";
+          opening = "<";
+          closing = ">";
         }
         return opening+this.name+closing;
       },
@@ -35,7 +39,21 @@ function createSentenceJSON(sentence, typology="", group="") {
       }
     }
     console.log(node);
-    return JSON.stringify(node);
-  }
+    return node;
+  },
 
-module.exports = createSentenceJSON;
+  createClauseNode: function (clause) {
+    let node = {
+      id: clause['_id'],
+      text: clause['text'],
+      type: clause['type'],
+      subtype: clause['subtype'],
+      subject: clause['subject'],
+      tense: clause['tense'],
+      sentiment: clause['sentiment']['mood'],
+      tags: clause['tags'],
+      fav: false
+    }
+    return node
+  }
+}

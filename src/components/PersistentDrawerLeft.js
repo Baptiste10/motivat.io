@@ -18,7 +18,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import FullWidthTabs from './OwnersTabs'
-import fetch from 'isomorphic-fetch'
+
 
 const drawerWidth = 400;
 
@@ -124,11 +124,18 @@ const styles = theme => ({
 
 
 class PersistentDrawerLeft extends React.Component {
-  state = {
-    open: false,
-  };
+  constructor(props){
+    super(props);
+    this.db = props.db;
+    this.state = {
+      open: false,
+      SentenceList: []
+    };
 
-
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleSearchQuery = this.handleSearchQuery.bind(this);
+  }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -137,6 +144,10 @@ class PersistentDrawerLeft extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
+
+  handleSearchQuery = (text) => {
+    this.db.searchHandler("work #PERSON #pos", '5c93b5bd81a7c320908513e1', '5c93b5bd81a7c320908513e0').then(console.log);
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -188,18 +199,7 @@ class PersistentDrawerLeft extends React.Component {
                 }}
                 onChange={e => {
                   let text = e.target.value;
-                  text = text.split(' ').join('_');
-                  fetch('http://localhost:3001/search/'+text, {mode:'no-cors'}).then(res => {
-                    if (res.status >= 400) {
-                      throw new Error("Bad response from server");
-                    }
-                    console.log(res)
-                    return res.json()
-                  }).then(res => {
-                    console.log(res)
-                  }).catch(err => {
-                      console.error(err.message);
-                  })
+                  this.handleSearchQuery(text);
                 }}
             />
           </div>

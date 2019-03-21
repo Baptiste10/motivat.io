@@ -11,7 +11,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      TranscriptId: null,
+      transcriptId: null,
       setSelectedTranscript: 'No transcript picked',
       transcriptList: []
     };
@@ -45,18 +45,18 @@ class App extends Component {
     console.log('Active transcript ID: ', this.state.transcriptId)
     let transcriptDialog
     // Render the transcript dialog only if the user hasn't picked any transcript to analyse yet.
-    if(this.state.transcriptId == null) {
-      transcriptDialog = <SimpleDialogDemo 
-        selectedTranscript={this.state.selectedTranscript}
-        transcriptId={this.state.transcriptId}
-        handleClose={this.handleClose}
-        handleClickOpen={this.handleClickOpen}
-        transcriptList={this.state.transcriptList}
-      />
-    }
+    
+    transcriptDialog = <SimpleDialogDemo 
+      selectedTranscript={this.state.selectedTranscript}
+      transcriptId={this.state.transcriptId}
+      handleClose={this.handleClose}
+      handleClickOpen={this.handleClickOpen}
+      transcriptList={this.state.transcriptList}
+    />
+    
     return (
       <div className ='App'>
-        <PersistentDrawerLeft/>
+        <PersistentDrawerLeft db={db}/>
         {transcriptDialog}
       </div>
     );

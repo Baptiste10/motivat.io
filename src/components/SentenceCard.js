@@ -12,7 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 400,
+    width: "100%",
   },
   actions: {
     display: 'flex',
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function SentenceCard() {
+function SentenceCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -41,7 +41,7 @@ function SentenceCard() {
           <FavoriteIcon />
         </IconButton>
         <Typography color="textSecondary" gutterBottom>
-          Sentence 1
+          {props.content.text}
           </Typography>
         <IconButton
           className={classnames(classes.expand, {

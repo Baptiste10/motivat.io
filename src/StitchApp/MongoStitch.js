@@ -187,7 +187,7 @@ class MongoStitch {
         listOfSentences.push(sentenceObject);
       }
     }
-    
+    console.log('Output listOfSentences: ', listOfSentences)
      return listOfSentences
   };
 

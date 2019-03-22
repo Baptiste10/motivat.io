@@ -11,7 +11,7 @@ import TurnCard from './TurnCard'
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+    <Typography component="div" dir={dir} style={{ padding: 8 * 2 }}>
       {children}
     </Typography>
   );
@@ -30,7 +30,7 @@ const styles = theme => ({
 });
 
 class FullWidthTabs extends React.Component {
-
+  
   handleTabChange = (event, tabValue) => {
     this.props.handleTabChange(event, tabValue);
   };
@@ -38,6 +38,7 @@ class FullWidthTabs extends React.Component {
   handleTabChangeIndex = index => {
     this.props.handleTabChangeIndex(index);
   };
+
 
   render() {
     const { classes, theme } = this.props;
@@ -62,16 +63,22 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleTabChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            <TurnCard/>
-            <TurnCard/>
-            <TurnCard/>
-            <TurnCard/>
+          <ul>
+            {this.props.sentenceList.map(
+              (sentenceObject) =>
+                <TurnCard key={sentenceObject.sentence.id.toString()}
+                          content={sentenceObject} />
+             )}
+          </ul>
           </TabContainer>
           <TabContainer dir={theme.direction}>
-            <TurnCard/>
-            <TurnCard/>
-            <TurnCard/>
-            <TurnCard/>
+          <ul>
+            {this.props.sentenceList.map(
+              (sentenceObject) =>
+                <TurnCard key={sentenceObject.sentence.id.toString()}
+                          content={sentenceObject} />
+             )}
+          </ul>
           </TabContainer>
         </SwipeableViews>
       </div>
@@ -83,5 +90,6 @@ FullWidthTabs.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
+
 
 export default withStyles(styles, { withTheme: true })(FullWidthTabs);

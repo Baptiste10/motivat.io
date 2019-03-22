@@ -62,7 +62,7 @@ class App extends Component {
         <PersistentDrawerLeft 
           db={db} 
           owners={this.state.transcriptOwners}
-          transcriptID={this.state.transcriptId}
+          transcriptId={this.state.transcriptId}
           />
         {transcriptDialog}
       </div>

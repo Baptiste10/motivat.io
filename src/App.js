@@ -12,6 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       transcriptId: null,
+      transcriptOwners: [],
       setSelectedTranscript: 'No transcript picked',
       transcriptList: []
     };
@@ -20,16 +21,18 @@ class App extends Component {
     this.handleClickOpen = this.handleClickOpen.bind(this);
   }
 
-  handleClose = value => {
-    db.getTranscriptId(value).then(
-      val => {
-        this.setState({
-          selectedTranscript: value,
-          transcriptId: val
-        });
-      }
+  handleClose = name => {
+    db.getTranscriptId(name).then(
+      id => {db.getTranscriptOwners(id).then(
+        owners => {
+          this.setState({
+          selectedTranscript: name,
+          transcriptId: id,
+          transcriptOwners: owners
+          })
+        }
+      )}
     )
-    
   };
 
   handleClickOpen = function() {
@@ -56,7 +59,11 @@ class App extends Component {
     
     return (
       <div className ='App'>
-        <PersistentDrawerLeft db={db}/>
+        <PersistentDrawerLeft 
+          db={db} 
+          owners={this.state.transcriptOwners}
+          transcriptID={this.state.transcriptId}
+          />
         {transcriptDialog}
       </div>
     );

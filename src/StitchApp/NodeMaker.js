@@ -2,12 +2,12 @@
 module.exports = {
   createSentenceNode : function (sentence, typology="", group="") {
     let node = {
-      id: sentence['_id'],
-      turn: sentence['turn'],
-      name: sentence['title'],
-      text: sentence['text'],
+      id: sentence._id,
+      turn: sentence.turn,
+      name: sentence.title,
+      text: sentence.text,
       typology: typology,
-      mood: sentence["sentiment"] ? sentence["sentiment"]["mood"] : "",
+      sentiment: sentence.sentiment,
       group: group,
       title: function() {
         var opening;

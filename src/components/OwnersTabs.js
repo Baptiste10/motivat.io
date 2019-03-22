@@ -30,16 +30,13 @@ const styles = theme => ({
 });
 
 class FullWidthTabs extends React.Component {
-  state = {
-    value: 0,
+
+  handleTabChange = (event, tabValue) => {
+    this.props.handleTabChange(event, tabValue);
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
+  handleTabChangeIndex = index => {
+    this.props.handleTabChangeIndex(index);
   };
 
   render() {
@@ -49,8 +46,8 @@ class FullWidthTabs extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" color="default">
           <Tabs
-            value={this.state.value}
-            onChange={this.handleChange}
+            value={this.props.tabValue}
+            onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
             variant="fullWidth"
@@ -61,8 +58,8 @@ class FullWidthTabs extends React.Component {
         </AppBar>
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={this.state.value}
-          onChangeIndex={this.handleChangeIndex}
+          index={this.props.tabValue}
+          onChangeIndex={this.handleTabChangeIndex}
         >
           <TabContainer dir={theme.direction}>
             <TurnCard/>

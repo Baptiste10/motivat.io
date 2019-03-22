@@ -129,13 +129,37 @@ class PersistentDrawerLeft extends React.Component {
     this.db = props.db;
     this.state = {
       open: false,
-      SentenceList: []
+      SentenceList: [],
+      tabValue: 0,
+      activeOwnerId: 0
     };
 
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleSearchQuery = this.handleSearchQuery.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleTabChangeIndex = this.handleTabChangeIndex.bind(this);
   }
+
+  handleTabChange = (event, tabValue) => {
+    var newOwnerId = 'pick a transcript first';
+    var newOwnerName = 'pick a transcript first';
+    try{
+      newOwnerId = this.props.owners[tabValue][0];
+      newOwnerName = this.props.owners[tabValue][1];
+    }catch(e){};
+    console.log('New Active Owner: ', newOwnerName);
+    this.setState({ 
+      tabValue, 
+      activeOwnerId: newOwnerId
+    });
+  };
+
+  handleTabChangeIndex = index => {
+    this.setState({ 
+      tabValue: index,
+    });
+  };
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -146,7 +170,7 @@ class PersistentDrawerLeft extends React.Component {
   };
 
   handleSearchQuery = (text) => {
-    this.db.searchHandler("work #PERSON #pos", '5c93b5bd81a7c320908513e1', '5c93b5bd81a7c320908513e0').then(console.log);
+    this.db.searchHandler("work #PERSON #pos", '5c94b87d81a7c32388a3ef85', '5c94b87d81a7c32388a3ef84').then(console.log);
   }
 
   render() {
@@ -211,7 +235,11 @@ class PersistentDrawerLeft extends React.Component {
           
           
 
-          <FullWidthTabs/>
+          <FullWidthTabs
+            tabValue={this.state.tabValue}
+            handleTabChange={this.handleTabChange}
+            handleTabChangeIndex={this.handleTabChangeIndex}
+          />
 
           
         </Drawer>

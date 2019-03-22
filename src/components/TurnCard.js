@@ -67,7 +67,7 @@ class TurnCard extends React.Component {
               {this.props.content.clauses.map(
                 (clauseNode) =>
                   <SentenceCard key={clauseNode.id.toString()}
-                            content={clauseNode} />
+                            clause={clauseNode} />
               )}
             </ul>
           </CardContent>

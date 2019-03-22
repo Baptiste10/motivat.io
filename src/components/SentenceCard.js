@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import FilledTextFields from './ClauseParameters'
+
 const useStyles = makeStyles(theme => ({
   card: {
     width: "100%",
@@ -41,7 +43,7 @@ function SentenceCard(props) {
           <FavoriteIcon />
         </IconButton>
         <Typography color="textSecondary" gutterBottom>
-          {props.content.text}
+          {props.clause.text}
           </Typography>
         <IconButton
           className={classnames(classes.expand, {
@@ -56,7 +58,8 @@ function SentenceCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          
+          <FilledTextFields key={props.clause.id.toString()}
+                            content={props.clause.attributes} />
         </CardContent>
       </Collapse>
     </Card>

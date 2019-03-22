@@ -46,12 +46,14 @@ module.exports = {
     let node = {
       id: clause['_id'],
       text: clause['text'],
-      type: clause['type'],
-      subtype: clause['subtype'],
-      subject: clause['subject'],
-      tense: clause['tense'],
-      sentiment: clause['sentiment']['mood'],
-      tags: clause['tags'],
+      attributes: {
+        type: clause['type'],
+        subtype: clause['subtype'],
+        subject: clause['subject'],
+        tense: clause['tense'],
+        sentiment: clause['sentiment']['mood'],
+        tags: clause['tags']
+      },
       fav: false
     }
     return node

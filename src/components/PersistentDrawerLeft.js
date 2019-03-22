@@ -6,7 +6,6 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -93,10 +92,11 @@ const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    //width: theme.spacing.unit * 9,
     height: '100%',
     position: 'absolute',
-    pointerEvents: 'none',
+    padding: 10,
+    //pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -216,9 +216,9 @@ class PersistentDrawerLeft extends React.Component {
         >
           <div className={classes.drawerHeader}>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
+              <IconButton className={classes.searchIcon} aria-label="Search">
                 <SearchIcon />
-              </div>
+              </IconButton>
               <InputBase
                 placeholder="Search…"
                 classes={{

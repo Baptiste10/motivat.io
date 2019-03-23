@@ -216,7 +216,10 @@ class PersistentDrawerLeft extends React.Component {
         >
           <div className={classes.drawerHeader}>
             <div className={classes.search}>
-              <IconButton className={classes.searchIcon} aria-label="Search">
+              <IconButton 
+                className={classes.searchIcon} 
+                aria-label="Search"
+                >
                 <SearchIcon />
               </IconButton>
               <InputBase

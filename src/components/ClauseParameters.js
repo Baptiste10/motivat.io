@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: "5px",
     marginRight: "5px",
-    width: "30%"
+    width: "45%"
   }
 }));
 
@@ -21,12 +21,13 @@ function FilledTextFields(props) {
   const classes = useStyles();
 
   const handleChange = event => {};
-
+  console.log(typeof props.node, props.node)
   return (
     <form className={classes.container} noValidate autoComplete="off">
       <ul>
         {Object.keys(props.node).map(attribute => (
           <TextField
+            key={attribute}
             label={attribute}
             className={classes.textField}
             value={props.node[attribute]}

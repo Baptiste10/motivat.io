@@ -13,6 +13,7 @@
     "contentful": "^7.4.1",
     "express": "^4.16.4",
     "isomorphic-fetch": "^2.2.1",
+    "material-ui-search-bar": "^0.4.2",
     "mongodb": "^3.1.13",
     "mongodb-stitch-browser-sdk": "^4.3.2",
     "mongoose": "^5.4.19",

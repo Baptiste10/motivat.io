@@ -59,7 +59,7 @@ function SentenceCard(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <FilledTextFields key={props.clause.id.toString()}
-                            content={props.clause.attributes} />
+                            node={props.clause.attributes} />
         </CardContent>
       </Collapse>
     </Card>

@@ -1,7 +1,7 @@
 // Create the JSON sentence out of its db document
 module.exports = {
   createSentenceNode : function (sentence, typology="", group="") {
-    let node = {
+    let Node = {
       id: sentence._id,
       turn: sentence.turn,
       name: sentence.title,
@@ -30,20 +30,20 @@ module.exports = {
         return this.title()+this.body()
       },
       relation: function(){
-        if(this.sentiment === 'pos'){
+        if(this.sentiment == 'pos'){
           return "+ ";
         }
-        if(this.sentiment === 'neg'){
+        if(this.sentiment == 'neg'){
           return "- ";
         }
       }
     }
-    console.log(node);
-    return node;
+    console.log(Node);
+    return Node;
   },
 
   createClauseNode: function (clause) {
-    let node = {
+    let Node = {
       id: clause['_id'],
       text: clause['text'],
       attributes: {
@@ -56,6 +56,15 @@ module.exports = {
       },
       fav: false
     }
-    return node
+    return Node
+  },
+
+  createEdge: function (bossNode, attributeNode) {
+    let Edge = {
+      attribute: attributeNode,
+      role: attributeNode.relation(),
+      boss: bossNode
+    }
+    return Edge;
   }
 }

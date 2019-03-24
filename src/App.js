@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import PersistentDrawerLeft from './components/PersistentDrawerLeft'
+import PersistentDrawerRight from './components/PersistentDrawerRight'
 import SimpleDialogDemo from './components/ChooseOption/SimpleDialog'
 import MongoStitch from './StitchApp/MongoStitch'
 
@@ -56,13 +57,15 @@ class App extends Component {
       handleClickOpen={this.handleClickOpen}
       transcriptList={this.state.transcriptList}
     />
+
+    
     
     return (
       <div className ='App'>
-        <PersistentDrawerLeft 
-          db={db} 
-          owners={this.state.transcriptOwners}
+        <PersistentDrawerRight 
+          db={db}
           transcriptId={this.state.transcriptId}
+          owners={this.state.transcriptOwners}
           />
         {transcriptDialog}
       </div>

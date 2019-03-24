@@ -1,4 +1,5 @@
 const ObjectId = require('mongodb').ObjectID
+const MongoClient = require('mongodb').MongoClient;
 const {
         Stitch,
         RemoteMongoClient,
@@ -25,6 +26,7 @@ class MongoStitch {
     this.Sentences = await this.db.collection("Sentences");
     this.Clauses = await this.db.collection("Clauses");
   };
+
   
   findInDb = async function (collectionName, query, options){
     try {

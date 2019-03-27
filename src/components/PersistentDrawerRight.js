@@ -3,16 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import SimpleSelect from './SimpleSelect'
 import OwnerSelect from './OwnerSelect'
@@ -25,28 +20,6 @@ const drawerWidth = 400;
 const styles = theme => ({
   root: {
     display: 'flex',
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: drawerWidth,
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 20,
-  },
-  hide: {
-    display: 'none',
   },
   drawer: {
     width: drawerWidth,
@@ -130,7 +103,6 @@ class PersistentDrawerRight extends React.Component {
     super(props);
     this.db = props.db;
     this.state = {
-      open: false,
       selectedMap: '',
       selectedPOV: '',
       clientKeyword: '',
@@ -156,11 +128,11 @@ class PersistentDrawerRight extends React.Component {
   };
 
   handleDrawerOpen = () => {
-    this.setState({ open: true });
+    this.props.handleDrawerOpen();
   };
 
   handleDrawerClose = () => {
-    this.setState({ open: false });
+    this.props.handleDrawerClose();
   };
 
   handlePreviewButton = (value) => {
@@ -168,26 +140,29 @@ class PersistentDrawerRight extends React.Component {
   }
   
   
-  
   render() {
-    const { classes, theme } = this.props;
-    const { open } = this.state;
+    const { classes, theme, open } = this.props;
 
-    let mapSelector = <SimpleSelect
+    let mapSelector = 
+    <SimpleSelect
       handleSelectChange={this.handleSelectChange}
       selectedMap={this.state.selectedMap}
     />
+
     let ownerSelector;
     if (this.state.selectedMap==='Keyword Map'){
-      ownerSelector=<OwnerSelect
+      ownerSelector=
+      <OwnerSelect
         owners={this.props.owners}
         handleSelectChange={this.handleSelectChange}
         selectedPOV={this.state.selectedPOV}
       />
     }
+
     let keywordSelector;
     if (this.state.selectedMap==='Keyword Map'){
-      keywordSelector=<KeywordSelect
+      keywordSelector=
+      <KeywordSelect
         owners={this.props.owners}
         transcriptId={this.props.transcriptId}
         db={this.db}
@@ -196,6 +171,7 @@ class PersistentDrawerRight extends React.Component {
         coachKeyword={this.state.coachKeyword}
       />
     }
+
     let nestedTree;
     if (this.state.selectedPOV !=='' && (this.state.clientKeyword !=='' || this.state.coachKeyword !== '')){
       nestedTree = <NestedTree
@@ -206,27 +182,6 @@ class PersistentDrawerRight extends React.Component {
 
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          className={classNames(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
-          <Toolbar disableGutters={!open}>
-            <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, open && classes.hide)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              Motivat.io
-            </Typography>
-          </Toolbar>
-        </AppBar>
        <Drawer 
           className={classes.drawer}
           variant="persistent"
@@ -239,7 +194,7 @@ class PersistentDrawerRight extends React.Component {
         >
           <div className={classes.drawerHeader}>
             <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              {theme.direction === 'ltr' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
             <h1>Map Maker</h1>
             <Divider />

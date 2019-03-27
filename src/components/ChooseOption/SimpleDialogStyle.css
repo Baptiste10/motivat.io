@@ -1,3 +1,12 @@
 .TranscriptInput {
   display: none;
 }
+
+.fabButton {
+  position: absolute;
+  top: -30;
+  left: 0;
+  right: 0;
+  height: 10%;
+  margin: 0 auto;
+}

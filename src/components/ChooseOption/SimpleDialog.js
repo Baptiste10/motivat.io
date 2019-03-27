@@ -7,6 +7,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import SimpleDialogStyle from './SimpleDialogStyle.css'
 
 
@@ -83,9 +85,9 @@ function SimpleDialogDemo(props) {
     <div>
       <Typography variant="subtitle1">Selected: {props.selectedTranscript}</Typography>
       <br />
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Switch to a different transcript
-      </Button>
+      <Fab color="secondary" aria-label="Add" onClick={handleClickOpen} className="fabButton">
+        <AddIcon />
+      </Fab>
       <SimpleDialog selectedValue={props.selectedTranscript} open={open} onClose={handleClose} transcriptList={props.transcriptList} />
     </div>
   );

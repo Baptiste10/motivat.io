@@ -16,7 +16,7 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 380,
+    minWidth: 370,
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -40,7 +40,9 @@ class OwnerSelect extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    let ownersItems = this.props.owners.map(owner=>{
+      return <MenuItem value={owner[1]}>{owner[1]}</MenuItem>
+    })
     return (
         <div>
             <form className={classes.root} autoComplete="off">
@@ -64,8 +66,7 @@ class OwnerSelect extends React.Component {
                         />
                         }
                     >
-                        <MenuItem value={this.props.owners[0][1]}>{this.props.owners[0][1]}</MenuItem>
-                        <MenuItem value={this.props.owners[1][1]}>{this.props.owners[1][1]}</MenuItem>
+                        {ownersItems}
                     </Select>
                 </FormControl>
             </form>

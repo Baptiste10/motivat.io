@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
+import { withStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   container: {
     display: "flex",
     flexWrap: "wrap"
@@ -15,30 +15,34 @@ const useStyles = makeStyles(theme => ({
     marginRight: "5px",
     width: "45%"
   }
-}));
+});
 
-function FilledTextFields(props) {
-  const classes = useStyles();
+class FilledTextFields extends React.Component {
 
-  const handleChange = event => {};
-  console.log(typeof props.node, props.node)
-  return (
-    <form className={classes.container} noValidate autoComplete="off">
-      <ul>
-        {Object.keys(props.node).map(attribute => (
-          <TextField
-            key={attribute}
-            label={attribute}
-            className={classes.textField}
-            value={props.node[attribute]}
-            onChange={handleChange("name")}
-            variant="filled"
-            margin="dense"
-          />
-        ))}
-      </ul>
-    </form>
-  );
+  handleCardChange = event => {
+    this.props.handleCardChange(event);
+  };
+
+  render(){
+    const { classes } = this.props;
+    return (
+      <form className={classes.container} noValidate autoComplete="off">
+        <ul>
+          {Object.keys(this.props.node).map(attribute => (
+            <TextField
+              key={attribute}
+              label={attribute}
+              className={classes.textField}
+              value={this.props.node[attribute]}
+              onChange={this.handleCardChange}
+              variant="filled"
+              margin="dense"
+            />
+          ))}
+        </ul>
+      </form>
+    );
+  }
 }
 
-export default FilledTextFields;
+export default withStyles(styles)(FilledTextFields);

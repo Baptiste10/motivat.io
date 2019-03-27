@@ -1,4 +1,6 @@
-// Create the JSON sentence out of its db document
+// Client-side : creates nodes and edges out of Mongo sentences/clauses
+
+
 module.exports = {
   createSentenceNode : function (sentence, typology="", group="") {
     let Node = {
@@ -20,6 +22,10 @@ module.exports = {
           opening = "<";
           closing = ">";
         }
+        if(this.typology==='group'){
+          opening = "#";
+          closing = "";
+        }
         return opening+this.name+closing;
       },
       body: function(){
@@ -30,15 +36,14 @@ module.exports = {
         return this.title()+this.body()
       },
       relation: function(){
-        if(this.sentiment == 'pos'){
+        if(this.sentiment === 'pos'){
           return "+ ";
         }
-        if(this.sentiment == 'neg'){
+        if(this.sentiment === 'neg'){
           return "- ";
         }
       }
     }
-    console.log(Node);
     return Node;
   },
 
@@ -59,11 +64,23 @@ module.exports = {
     return Node
   },
 
-  createEdge: function (bossNode, attributeNode) {
+  createEdge: function (bossNode, attributeNode, mapId) {
     let Edge = {
       attribute: attributeNode,
       role: attributeNode.relation(),
-      boss: bossNode
+      boss: bossNode,
+      doc: {
+        map: mapId,
+        nodeId: attributeNode.id,
+        type: attributeNode.typology,
+        title: attributeNode.name,
+        text: attributeNode.text,
+        parentLevel: null,
+        parentIndex: null,
+        parentId: bossNode.id,
+        index: null,
+        relation: attributeNode.relation()
+      }
     }
     return Edge;
   }

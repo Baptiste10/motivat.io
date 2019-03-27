@@ -39,6 +39,10 @@ class FullWidthTabs extends React.Component {
     this.props.handleTabChangeIndex(index);
   };
 
+  handleCardChange = (event, id) => {
+    this.props.db.updateClause(id, event.target.label, event.target.value)
+  };
+
 
   render() {
     const { classes, theme } = this.props;
@@ -66,8 +70,12 @@ class FullWidthTabs extends React.Component {
           <ul>
             {this.props.sentenceList.map(
               (sentenceObject) =>
-                <TurnCard key={sentenceObject.sentence.id.toString()}
-                          content={sentenceObject} />
+                <TurnCard 
+                  key={sentenceObject.sentence.id.toString()}
+                  content={sentenceObject}
+                  db={this.props.db}
+                  handleCardChange={this.handleCardChange}
+                />
              )}
           </ul>
           </TabContainer>
@@ -75,8 +83,12 @@ class FullWidthTabs extends React.Component {
           <ul>
             {this.props.sentenceList.map(
               (sentenceObject) =>
-                <TurnCard key={sentenceObject.sentence.id.toString()}
-                          content={sentenceObject} />
+                <TurnCard 
+                    key={sentenceObject.sentence.id.toString()}
+                    content={sentenceObject} 
+                    db={this.props.db}
+                    handleCardChange={this.handleCardChange}
+                />
              )}
           </ul>
           </TabContainer>

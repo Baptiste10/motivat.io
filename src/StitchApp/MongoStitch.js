@@ -48,6 +48,20 @@ class MongoStitch {
       }
   };
 
+  updateClause = function (clauseId, updatedField, newValue){
+    const query = { "_id": ObjectId(clauseId) };
+    const update = {updatedField: newValue};
+
+    this.Clauses.updateOne(query, update)
+      .then(result => {
+        const { matchedCount, modifiedCount } = result;
+        if(matchedCount && modifiedCount) {
+          console.log(`Successfully added a new review: ${update}`)
+        }
+      })
+      .catch(err => console.error(`Failed to add review: ${err}`))
+  }
+
   getAllTranscripts = async function () {
     const query = {};
     const project = "name";
@@ -88,6 +102,22 @@ class MongoStitch {
     return [client[0], coach[0]];
   };
 
+  getTranscriptKeywords = async function (transcriptId){
+    //Query the coach keywords
+    var query = {'_id': ObjectId(transcriptId)};
+    var project = 'coach_keywords';
+    var options = {"projection": {coach_keywords:1, _id: 0}};
+    var docs = await this.findInDb(this.Transcripts, query, options )
+    const coach = await this.docToArray(docs, project);
+    //Query the client keywords
+    query = {'_id': ObjectId(transcriptId)};
+    project = 'client_keywords'
+    options = {"projection": {client_keywords:1, _id: 0}};
+    docs = await this.findInDb(this.Transcripts, query, options )
+    const client = await this.docToArray(docs, project);
+    return {coachKeywords: coach[0], clientKeywords: client[0]};
+  };
+
   docToArray = function (docs, project) {
     var results = [];
       for (var element of docs) {
@@ -107,6 +137,8 @@ class MongoStitch {
     let project = "";
     match.transcript = ObjectId(transcriptId);
     match.owner = ObjectId(ownerId);
+    //Make sure we don't get the useless statements
+    match.subtype = {$ne: "Nothing"}
 
     // ------------- Extract hashtags -------------
     
@@ -128,7 +160,7 @@ class MongoStitch {
     // ------------ Identify hashtags -------------
   
     for (var hashtag of hashtags) {
-      if (hashtag == hashtag.toUpperCase()){
+      if (hashtag === hashtag.toUpperCase()){
         // return sentences involving his named entity category
         match.tags = hashtag;
       }else {

@@ -39,6 +39,10 @@ class TurnCard extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleCardChange = (event, id) => {
+    this.props.handleCardChange(event, id)
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -66,8 +70,11 @@ class TurnCard extends React.Component {
             <ul>
               {this.props.content.clauses.map(
                 (clauseNode) =>
-                  <SentenceCard key={clauseNode.id.toString()}
-                            clause={clauseNode} />
+                  <SentenceCard 
+                    key={clauseNode.id.toString()}
+                    clause={clauseNode}
+                    handleCardChange={this.props.handleCardChange}
+                  />
               )}
             </ul>
           </CardContent>

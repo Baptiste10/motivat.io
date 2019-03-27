@@ -170,7 +170,7 @@ class PersistentDrawerLeft extends React.Component {
   };
 
   handleSearchQuery = (text) => {
-    this.db.searchHandler("work #PERSON #pos", this.props.transcriptId, this.state.activeOwnerId).then(result =>{
+    this.db.searchHandler("work #PERSON", this.props.transcriptId, this.state.activeOwnerId).then(result =>{
       this.setState({
         sentenceList: result
       });
@@ -247,6 +247,7 @@ class PersistentDrawerLeft extends React.Component {
             handleTabChange={this.handleTabChange}
             handleTabChangeIndex={this.handleTabChangeIndex}
             sentenceList={this.state.sentenceList}
+            db={this.props.db}
           />
 
           

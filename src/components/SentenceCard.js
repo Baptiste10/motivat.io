@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,7 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import FilledTextFields from './ClauseParameters'
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   card: {
     width: "100%",
   },
@@ -26,44 +26,60 @@ const useStyles = makeStyles(theme => ({
   expandOpen: {
     transform: 'rotate(0deg)',
   },
-}));
+});
 
-function SentenceCard(props) {
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  function handleExpandClick() {
-    setExpanded(!expanded);
+class SentenceCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false
+    };
   }
 
-  return (
-    <Card className={classes.card}>
-      <CardActions className={classes.actions} disableActionSpacing>
-        <IconButton aria-label="Add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <Typography color="textSecondary" gutterBottom>
-          {props.clause.text}
-          </Typography>
-        <IconButton
-          className={classnames(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="Show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <FilledTextFields key={props.clause.id.toString()}
-                            node={props.clause.attributes} />
-        </CardContent>
-      </Collapse>
-    </Card>
-  );
+  handleExpandClick = () => {
+    this.setState({expanded: !this.state.expanded});
+  }
+
+  handleCardChange = event => {
+    this.props.handleCardChange(event, this.props.clause.id.toString())
+  }
+
+  render(){
+    const { classes } = this.props;
+    
+
+    return (
+      <Card className={classes.card}>
+        <CardActions className={classes.actions} disableActionSpacing>
+          <IconButton aria-label="Add to favorites">
+            <FavoriteIcon />
+          </IconButton>
+          <Typography color="textSecondary" gutterBottom>
+            {this.props.clause.text}
+            </Typography>
+          <IconButton
+            className={classnames(classes.expand, {
+              [classes.expandOpen]: this.state.expanded,
+            })}
+            onClick={this.handleExpandClick}
+            aria-expanded={this.state.expanded}
+            aria-label="Show more"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </CardActions>
+        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <FilledTextFields 
+              key={this.props.clause.id.toString()}
+              node={this.props.clause.attributes}
+              handleCardChange={this.handleCardChange}
+            />
+          </CardContent>
+        </Collapse>
+      </Card>
+    );
+  }
 }
 
-export default SentenceCard;
+export default withStyles(styles)(SentenceCard);

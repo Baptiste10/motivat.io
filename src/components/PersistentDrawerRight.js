@@ -16,8 +16,8 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import SimpleSelect from './SimpleSelect'
 import OwnerSelect from './OwnerSelect'
-import Maps from '../StitchApp/MapsBuilder'
 import KeywordSelect from './KeywordSelect'
+import NestedTree from './NestedTree/NestedTree'
 
 
 const drawerWidth = 400;
@@ -141,12 +141,18 @@ class PersistentDrawerRight extends React.Component {
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.getMapOptions = this.getMapOptions.bind(this)
+    this.handlePreviewButton = this.handlePreviewButton.bind(this);
   }
 
   handleSelectChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-    console.log('Map picked: ', event.target.value)
+    if (event.target.name==="selectedMap"){
+      this.setState({
+        selectedPOV: '',
+        clientKeyword: '',
+        coachKeyword: ''
+      })
+    }
   };
 
   handleDrawerOpen = () => {
@@ -156,28 +162,23 @@ class PersistentDrawerRight extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
-  
-  getMapOptions = () => {
-    var mapNames = Object.getOwnPropertyNames(Maps.prototype);
-    var index = mapNames.indexOf('constructor');
-    if (index > -1) {
-      mapNames.splice(index, 1);
-    return mapNames;
-  }
-  
 
+  handlePreviewButton = (value) => {
+    this.props.handlePreviewButton(value);
   }
+  
+  
+  
   render() {
     const { classes, theme } = this.props;
     const { open } = this.state;
-    const mapOptions = this.getMapOptions();
 
     let mapSelector = <SimpleSelect
       handleSelectChange={this.handleSelectChange}
       selectedMap={this.state.selectedMap}
     />
     let ownerSelector;
-    if (this.state.selectedMap=='Keyword Map'){
+    if (this.state.selectedMap==='Keyword Map'){
       ownerSelector=<OwnerSelect
         owners={this.props.owners}
         handleSelectChange={this.handleSelectChange}
@@ -185,14 +186,22 @@ class PersistentDrawerRight extends React.Component {
       />
     }
     let keywordSelector;
-    if (this.state.selectedMap=='Keyword Map'){
+    if (this.state.selectedMap==='Keyword Map'){
       keywordSelector=<KeywordSelect
         owners={this.props.owners}
+        transcriptId={this.props.transcriptId}
+        db={this.db}
         handleSelectChange={this.handleSelectChange}
         clientKeyword={this.state.clientKeyword}
         coachKeyword={this.state.coachKeyword}
       />
-
+    }
+    let nestedTree;
+    if (this.state.selectedPOV !=='' && (this.state.clientKeyword !=='' || this.state.coachKeyword !== '')){
+      nestedTree = <NestedTree
+        mapName={this.state.selectedMap+" from "+this.state.selectedPOV+" POV"}
+      />;
+      this.handlePreviewButton(false);
     }
 
     return (
@@ -239,6 +248,7 @@ class PersistentDrawerRight extends React.Component {
           {mapSelector}
           {keywordSelector}
           {ownerSelector}
+          {nestedTree}
           
         </Drawer>
         <main

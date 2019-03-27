@@ -16,15 +16,16 @@ import Tree, {
   type TreeSourcePosition,
   type TreeDestinationPosition,
 } from '@atlaskit/tree';
-import { complexTree } from './packages/core/tree/mockdata/complexTree';
+import { complexTree } from './treeCode';
 
 const Container = styled.div`
   display: flex;
+  width: 170;
 `;
 
 const Dot = styled.span`
   display: flex;
-  width: 24px;
+  width: 170;
   height: 32px;
   justify-content: center;
   font-size: 12px;
@@ -86,7 +87,7 @@ export default class DragDropWithNestingTree extends Component<void, State> {
       <div ref={provided.innerRef} {...provided.draggableProps}>
         <AkNavigationItem
           isDragging={snapshot.isDragging}
-          text={item.data ? item.data.title : ''}
+          text={item.data ? item.data.title : 'No title'}
           icon={DragDropWithNestingTree.getIcon(item, onExpand, onCollapse)}
           dnd={{ dragHandleProps: provided.dragHandleProps }}
         />
@@ -113,7 +114,7 @@ export default class DragDropWithNestingTree extends Component<void, State> {
     destination: ?TreeDestinationPosition,
   ) => {
     const { tree } = this.state;
-
+    console.log("Node moved from", source, " to destination ", destination)
     if (!destination) {
       return;
     }

@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 180,
+    minWidth: 175,
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -27,20 +27,40 @@ const styles = theme => ({
 class KeywordSelect extends React.Component {
   state = {
     labelWidth: 0,
+    clientKeywords: [], 
+    coachKeywords: []
   };
 
   componentDidMount() {
     this.setState({
-      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
+      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth, 
     });
+    this.getKeywordList();
   }
 
   handleSelectChange = event => {
     this.props.handleSelectChange(event);
   };
 
+  getKeywordList(){
+    this.props.db.getTranscriptKeywords(this.props.transcriptId).then(({clientKeywords, coachKeywords}) => {
+      this.setState({
+        clientKeywords: clientKeywords, 
+        coachKeywords: coachKeywords
+      })
+    })
+  }
+  
   render() {
     const { classes } = this.props;
+
+    let coachList = this.state.coachKeywords.map(keyword => {
+      return <MenuItem value={keyword}>{keyword}</MenuItem>
+    });
+    let clientList = this.state.clientKeywords.map(keyword => {
+      return <MenuItem value={keyword}>{keyword}</MenuItem>
+    });
+
     return (
         <div className={classes.root}>
             <form  autoComplete="off">
@@ -49,7 +69,7 @@ class KeywordSelect extends React.Component {
                         ref={ref => {
                         this.InputLabelRef = ref;
                         }}
-                        htmlFor="outlined-map-simple"
+                        htmlFor="outlinedle-map-simp"
                     >
                         {this.props.owners[0][1]}
                     </InputLabel>
@@ -64,8 +84,10 @@ class KeywordSelect extends React.Component {
                         />
                         }
                     >
-                        <MenuItem value={'client keyword 1'}>client keyword 1</MenuItem>
-                        <MenuItem value={'client keyword 2'}>client keyword 2</MenuItem>
+                        <MenuItem value="">
+                        <em>None</em>
+                        </MenuItem>
+                        {clientList}
                     </Select>
                 </FormControl>
             </form>
@@ -90,14 +112,17 @@ class KeywordSelect extends React.Component {
                         />
                         }
                     >
-                        <MenuItem value={'coach keyword 1'}>coach keyword 1</MenuItem>
-                        <MenuItem value={'coach keyword 2'}>coach keyword 2</MenuItem>
+                        <MenuItem value="">
+                        <em>None</em>
+                        </MenuItem>
+                        {coachList}
                     </Select>
                 </FormControl>
             </form>
             
         </div>     
     );
+
   }
 }
 

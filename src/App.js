@@ -5,6 +5,7 @@ import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import PersistentDrawerRight from './components/PersistentDrawerRight'
 import SimpleDialogDemo from './components/ChooseOption/SimpleDialog'
 import MongoStitch from './StitchApp/MongoStitch'
+import PreviewButton from './components/PreviewButton'
 
 const db = new MongoStitch();
 
@@ -15,7 +16,8 @@ class App extends Component {
       transcriptId: null,
       transcriptOwners: [],
       setSelectedTranscript: 'No transcript picked',
-      transcriptList: []
+      transcriptList: [],
+      previewButtonEnabled: true
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -29,7 +31,7 @@ class App extends Component {
           this.setState({
           selectedTranscript: name,
           transcriptId: id,
-          transcriptOwners: owners
+          transcriptOwners: owners,
           })
         }
       )}
@@ -43,13 +45,16 @@ class App extends Component {
       })
     })
   }
+
+  handlePreviewButton = (value) => {
+    this.setState({previewButtonEnabled: value})
+  }
   
   
   render() {
     console.log('Active transcript ID: ', this.state.transcriptId)
     let transcriptDialog
     // Render the transcript dialog only if the user hasn't picked any transcript to analyse yet.
-    
     transcriptDialog = <SimpleDialogDemo 
       selectedTranscript={this.state.selectedTranscript}
       transcriptId={this.state.transcriptId}
@@ -58,16 +63,26 @@ class App extends Component {
       transcriptList={this.state.transcriptList}
     />
 
+    let mapPanel = <PersistentDrawerRight 
+      db={db}
+      transcriptId={this.state.transcriptId}
+      owners={this.state.transcriptOwners}
+      handlePreviewButton={this.handlePreviewButton}
+    />
+
+    let searchPanel = <PersistentDrawerLeft 
+      db={db}
+      transcriptId={this.state.transcriptId}
+      owners={this.state.transcriptOwners}
+    />
+
     
     
     return (
       <div className ='App'>
-        <PersistentDrawerRight 
-          db={db}
-          transcriptId={this.state.transcriptId}
-          owners={this.state.transcriptOwners}
-          />
+        {searchPanel}
         {transcriptDialog}
+        <PreviewButton disabled={this.state.previewButtonEnabled}/>
       </div>
     );
   }

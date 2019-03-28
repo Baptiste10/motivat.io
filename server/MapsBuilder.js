@@ -21,25 +21,27 @@ async function keywordMap (transcriptId, ownersId, keyword, reverse=false) {
         keyword: keyword
     }
 
-    mapId = await insertAtlas('Maps', [mapObject]) //the function takes an array of docs
+    const mapId = await insertAtlas('Maps', [mapObject]) //the function takes an array of docs
 
     const clauses_with_keyword = await queryAtlas('Clauses', {transcript:transcript, owner: mentionner, $text: {$search: keyword}});
     
-    for (let clause of clauses_with_keyword){
-        const sentence = await queryAtlas("Clauses", clause.sentence);
-        const question = createSentenceNode(sentence, 'statement');
-        const match = {transcript: transcriptId, owner:answerer, turn:clause.turn + reverse};
-        const answers = await queryAtlas("Sentences", match);
+    if(clauses_with_keyword){
+       for (let clause of clauses_with_keyword){
+            const sentence = await queryAtlas("Clauses", clause.sentence);
+            const question = await createSentenceNode(sentence, 'statement');
+            const match = {transcript: transcriptId, owner:answerer, turn:clause.turn + reverse};
+            const answers = await queryAtlas("Sentences", match);
 
-        for (let sentenceAnswer of answers) {
-            const answer = createSentenceNode(sentenceAnswer, 'argument', keyword);
-            edges.push(createEdge(answer, question, mapId));
+            for (let sentenceAnswer of answers) {
+                const answer = await createSentenceNode(sentenceAnswer, 'argument', keyword);
+                edges.push(createEdge(answer, question, mapId));
+            }
         }
     }
 }
 
 
-function keywordMap (transcriptId, ownersId, keyword, reverse=false) {
+function keywordMap2 (transcriptId, ownersId, keyword, reverse=false) {
     const transcript = ObjectId(transcriptId)
     const mentionner = ObjectId(ownersId[reverse*1+0]);
     const answerer = ObjectId(ownersId[1-reverse-1]);

@@ -18,23 +18,36 @@ const styles = theme => ({
 });
 
 class FilledTextFields extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {values: props.node }
+  }
 
-  handleCardChange = event => {
-    this.props.handleCardChange(event);
+  handleCardChange = name => event => {
+    this.setState(prevState => ({
+      values: {
+          ...prevState.values,
+          name: [event.target.value]
+      }
+  }))
   };
+
+  handleSubmit = event => {
+    this.props.handleCardChange(event);
+  }
 
   render(){
     const { classes } = this.props;
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <ul>
-          {Object.keys(this.props.node).map(attribute => (
+          {Object.keys(this.state.values).map(attribute => (
             <TextField
               key={attribute}
               label={attribute}
               className={classes.textField}
-              value={this.props.node[attribute]}
-              onChange={this.handleCardChange}
+              defaultValue={this.state.values[attribute]}
+              onChange={this.handleSubmit}
               variant="filled"
               margin="dense"
             />

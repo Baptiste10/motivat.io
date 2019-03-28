@@ -68,7 +68,7 @@ class FullWidthTabs extends React.Component {
         >
           <TabContainer dir={theme.direction}>
           <ul>
-            {this.props.sentenceList.map(
+            {this.props.clientSentenceList.map(
               (sentenceObject) =>
                 <TurnCard 
                   key={sentenceObject.sentence.id.toString()}
@@ -81,7 +81,7 @@ class FullWidthTabs extends React.Component {
           </TabContainer>
           <TabContainer dir={theme.direction}>
           <ul>
-            {this.props.sentenceList.map(
+            {this.props.coachSentenceList.map(
               (sentenceObject) =>
                 <TurnCard 
                     key={sentenceObject.sentence.id.toString()}

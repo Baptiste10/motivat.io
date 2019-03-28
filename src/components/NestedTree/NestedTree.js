@@ -95,6 +95,10 @@ export default class DragDropWithNestingTree extends Component<void, State> {
     );
   };
 
+  componentDidMount(){
+    this.props.previewButton(false)
+  }
+
   onExpand = (itemId: ItemId) => {
     const { tree }: State = this.state;
     this.setState({

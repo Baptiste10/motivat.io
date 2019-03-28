@@ -10,10 +10,11 @@ module.exports = {
     client.connect(err => {
       var dbo = client.db("mydatabase");
       const collection = dbo.collection(collectionName);
-      collection.find({ transcript: ObjectId("5c94b80d81a7c32388a3e8ca"), owner: ObjectId("5c94b80d81a7c32388a3e8c8"), '$text': { '$search':'In fact'} }).toArray(function(err, result) {
+      collection.find(query).toArray(function(err, result) {
         if (err) throw err;
         console.log("The query returned the following documents:"+result)
         client.close();
+        return result
       });
     });
   },
@@ -27,9 +28,12 @@ module.exports = {
       const collection = dbo.collection(collectionName);
       collection.insertMany(objArray, function(err, result) {
         if (err) throw err;
-        console.log("Id of documents inserted: " + res.insertedIds);
+        console.log("Id of documents inserted: " + result.insertedIds);
         client.close();
+        return result;
       });
     });
   }
 }
+
+//{ transcript: ObjectId("5c94b80d81a7c32388a3e8ca"), owner: ObjectId("5c94b80d81a7c32388a3e8c8"), '$text': { '$search':'In fact'} }

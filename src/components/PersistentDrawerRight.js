@@ -109,11 +109,6 @@ class PersistentDrawerRight extends React.Component {
       coachKeyword: '',
       name: 'hai'
     };
-
-    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
-    this.handleDrawerClose = this.handleDrawerClose.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handlePreviewButton = this.handlePreviewButton.bind(this);
   }
 
   handleSelectChange = event => {
@@ -175,9 +170,9 @@ class PersistentDrawerRight extends React.Component {
     let nestedTree;
     if (this.state.selectedPOV !=='' && (this.state.clientKeyword !=='' || this.state.coachKeyword !== '')){
       nestedTree = <NestedTree
+        previewButton={this.handlePreviewButton}
         mapName={this.state.selectedMap+" from "+this.state.selectedPOV+" POV"}
       />;
-      this.handlePreviewButton(false);
     }
 
     return (

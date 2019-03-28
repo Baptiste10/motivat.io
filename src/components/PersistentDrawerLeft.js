@@ -92,7 +92,8 @@ class PersistentDrawerLeft extends React.Component {
     super(props);
     this.db = props.db;
     this.state = {
-      sentenceList: [],
+      coachSentenceList: [],
+      clientSentenceList: [],
       tabValue: 0,
       activeOwnerId: 0
     };
@@ -132,11 +133,17 @@ class PersistentDrawerLeft extends React.Component {
   };
 
   handleSearchQuery = (text) => {
-    this.db.searchHandler("work #PERSON", this.props.transcriptId, this.state.activeOwnerId).then(result =>{
-      this.setState({
-        sentenceList: result
+    if(text[text.length -1]==="."){
+      text = text.replace('/.','');
+      this.db.searchHandler(text, this.props.transcriptId, this.state.activeOwnerId).then(result =>{
+        if(typeof result !== 'undefined' && result.length > 0){
+          this.setState({
+            clientSentenceList: result[0],
+            coachSentenceList: result[1]
+          });
+        }
       });
-    });
+    }
   }
 
   render() {
@@ -186,7 +193,8 @@ class PersistentDrawerLeft extends React.Component {
             tabValue={this.state.tabValue}
             handleTabChange={this.handleTabChange}
             handleTabChangeIndex={this.handleTabChangeIndex}
-            sentenceList={this.state.sentenceList}
+            coachSentenceList={this.state.coachSentenceList}
+            clientSentenceList={this.state.clientSentenceList}
             db={this.props.db}
           />
 

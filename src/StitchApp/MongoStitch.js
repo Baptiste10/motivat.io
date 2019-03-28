@@ -1,5 +1,4 @@
 const ObjectId = require('mongodb').ObjectID
-const MongoClient = require('mongodb').MongoClient;
 const {
         Stitch,
         RemoteMongoClient,
@@ -37,6 +36,24 @@ class MongoStitch {
       else {
         result = await collectionName.find(query).asArray();
       }
+      if(result.length > 0) {
+        console.log(`Successfully found document: `,result)
+      } else {
+        console.log("No document matches the provided query: ", query)
+      }
+      return result;
+      }catch(e) {
+        console.log(e);
+      }
+  };
+
+  clausesGroupedByOwner = async function (query){
+    try {
+      const matchStage = {$match: query}
+      const groupStage = {$group: {_id: "$owner", sentences: {$push: "$sentence"}}}
+      var result;
+      result = await this.Clauses.aggregate([matchStage, groupStage]).asArray();
+
       if(result.length > 0) {
         console.log(`Successfully found document: `,result)
       } else {
@@ -132,13 +149,12 @@ class MongoStitch {
     console.log('Search parameters: ',searchParameters, transcriptId, ownerId);
     // -----------Declare search parameters ------------
     let text = searchParameters;
-    let keywords = '';
     let match = {};
     let project = "";
     match.transcript = ObjectId(transcriptId);
-    match.owner = ObjectId(ownerId);
+    //match.owner = ObjectId(ownerId);
     //Make sure we don't get the useless statements
-    match.subtype = {$ne: "Nothing"}
+    //match.subtype = {$ne: "Nothing"}
 
     // ------------- Extract hashtags -------------
     
@@ -152,10 +168,6 @@ class MongoStitch {
     }
     // Remove hashtags from string
     text = text.replace(/#([\w-]+)/gi,"");
-  
-    // Assume remaining text are normal keywords. TEXT SEARCH UNSUPPORTED BY STITCH SO FAR
-    //keywords = text.replace(/\s\s+/g, ' ');
-    //match.$text = {$search: keywords};
   
     // ------------ Identify hashtags -------------
   
@@ -174,6 +186,18 @@ class MongoStitch {
             match.tense = hashtag;
             continue;
           }
+          if (hashtag === 'desire' || hashtag === 'need' || hashtag === 'ability' || hashtag === 'reason' || hashtag === 'commitment' || hashtag === 'activation' || hashtag === 'step' || hashtag === 'Nothing'){
+            // return sentences with the mentionned tense
+            if(hashtag==='step'){hashtag="taking step"}
+            match.subtype = hashtag;
+            continue;
+          }
+          if (hashtag === 'Open' || hashtag === 'Close' || hashtag === 'Affirmation'){
+            // return sentences with the mentionned tense
+            if(hashtag==='Open' || hashtag === 'Close'){hashtag = hashtag+" Question"}
+            match.type = hashtag;
+            continue;
+          }
       }
     }
   
@@ -186,43 +210,51 @@ class MongoStitch {
   // Query db for sentences matching the match parameter
   searchQueries = async function (match, project) {
     let clausesResult = [];
-    let listOfSentences= [];
     let listOfClauses = [];
     let clauseNode = [];
     let sentenceNode = [];
     let sentenceObject = {};
     let sentenceClauses = [];
     var sentence = {};
+    var clausesByOwner;
+    let ownerListOfSentences;
+    var sentencesByOwners = []
     // Look for all the clauses that satisfy the query parameters
     console.log("Look for clauses matching: ", match)
-    clausesResult = await this.findInDb(this.Clauses, match, project)
+    clausesByOwner = await this.clausesGroupedByOwner(match)
 
     // Check if query returned anything
-    if (typeof clausesResult !== 'undefined' && clausesResult.length > 0){
+    if (typeof clausesByOwner !== 'undefined' && clausesByOwner.length > 0){
+      
+      for (let owner of clausesByOwner){
+        ownerListOfSentences= [];
+        clausesResult = owner.sentences
+        var sentenceId;
+        for (let clause of clausesResult) {
+          listOfClauses = [];
+          sentenceId = clause;
+          // ...find all the clauses belonging to the same sentence
+          sentenceClauses = await this.findInDb(this.Clauses, {sentence: sentenceId})
 
-      // For each of the found clauses...
-      var sentenceId;
-      for (let clause of clausesResult) {
-        listOfClauses = [];
-        sentenceId = clause['sentence'];
-        // ...find all the clauses belonging to the same sentence
-        sentenceClauses = await this.findInDb(this.Clauses, {sentence: sentenceId})
-
-        // For each one of these "sibling clauses" make a node
-        for (let innerClause of sentenceClauses){
-          clauseNode = await createClauseNode(innerClause);
-          listOfClauses.push(clauseNode);
+          // For each one of these "sibling clauses" make a node
+          for (let innerClause of sentenceClauses){
+            clauseNode = await createClauseNode(innerClause);
+            listOfClauses.push(clauseNode);
+          }
+          
+          // ...find this clause original sentence and make a node out of it
+          sentence = await this.findInDb(this.Sentences, {_id: sentenceId});
+          sentenceNode = await createSentenceNode(sentence[0]);
+          sentenceObject = {sentence:sentenceNode, clauses:listOfClauses};
+          ownerListOfSentences.push(sentenceObject);
         }
-        
-        // ...find this clause original sentence and make a node out of it
-        sentence = await this.findInDb(this.Sentences, {_id: sentenceId});
-        sentenceNode = await createSentenceNode(sentence[0]);
-        sentenceObject = {sentence:sentenceNode, clauses:listOfClauses};
-        listOfSentences.push(sentenceObject);
+        sentencesByOwners.push(ownerListOfSentences)
+        console.log('Output sentencesByOwners: ', sentencesByOwners)
       }
+      // For each of the found clauses...
+      
     }
-    console.log('Output listOfSentences: ', listOfSentences)
-     return listOfSentences
+     return sentencesByOwners
   };
 
 }

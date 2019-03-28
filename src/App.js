@@ -93,7 +93,7 @@ class App extends Component {
   
   
   render() {
-    const { classes, theme } = this.props; 
+    const { classes } = this.props; 
 
     let bottomAppBar =
     <BottomAppBar

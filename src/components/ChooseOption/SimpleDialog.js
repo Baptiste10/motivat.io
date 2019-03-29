@@ -9,7 +9,8 @@ import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import SimpleDialogStyle from './SimpleDialogStyle.css'
+import './SimpleDialogStyle.css'
+import styled from 'styled-components';
 
 
 function UploadButton() {
@@ -67,6 +68,15 @@ SimpleDialog.propTypes = {
   selectedValue: PropTypes.string,
 };
 
+const StyledFab = styled(Fab)`
+  position: absolute;
+  top: -30;
+  left: 0;
+  right: 0;
+  height: 50%;
+  margin: 0 auto;
+`;
+
 function SimpleDialogDemo(props) {
   const [open, setOpen] = React.useState(false);
 
@@ -83,11 +93,9 @@ function SimpleDialogDemo(props) {
 
   return (
     <div>
-      <Typography variant="subtitle1">Selected: {props.selectedTranscript}</Typography>
-      <br />
-      <Fab color="secondary" aria-label="Add" onClick={handleClickOpen} className="fabButton">
+      <StyledFab color="secondary" aria-label="Add" onClick={handleClickOpen}>
         <AddIcon />
-      </Fab>
+      </StyledFab>
       <SimpleDialog selectedValue={props.selectedTranscript} open={open} onClose={handleClose} transcriptList={props.transcriptList} />
     </div>
   );

@@ -65,11 +65,53 @@ class MongoStitch {
       }
   };
 
-  updateClause = function (clauseId, updatedField, newValue){
+  updateClause = function (clauseId, update){
     const query = { "_id": ObjectId(clauseId) };
-    const update = {updatedField: newValue};
+    const update = update;
 
     this.Clauses.updateOne(query, update)
+      .then(result => {
+        const { matchedCount, modifiedCount } = result;
+        if(matchedCount && modifiedCount) {
+          console.log(`Successfully added a new review: ${update}`)
+        }
+      })
+      .catch(err => console.error(`Failed to add review: ${err}`))
+  }
+
+  updateClauseOwnerId = function (newValue){
+    const query = {};
+    const update = {owner_id: newValue};
+
+    this.Clauses.updateOne(query, update)
+      .then(result => {
+        const { matchedCount, modifiedCount } = result;
+        if(matchedCount && modifiedCount) {
+          console.log(`Successfully added a new review: ${update}`)
+        }
+      })
+      .catch(err => console.error(`Failed to add review: ${err}`))
+  }
+
+  updateSentenceOwnerId = function (newValue){
+    const query = {};
+    const update = {owner_id: newValue};
+
+    this.Sentences.updateOne(query, update)
+      .then(result => {
+        const { matchedCount, modifiedCount } = result;
+        if(matchedCount && modifiedCount) {
+          console.log(`Successfully added a new review: ${update}`)
+        }
+      })
+      .catch(err => console.error(`Failed to add review: ${err}`))
+  }
+
+  updateTranscriptOwnerId = function (newValue){
+    const query = {};
+    const update = {owner_id: newValue};
+
+    this.Transcripts.updateOne(query, update)
       .then(result => {
         const { matchedCount, modifiedCount } = result;
         if(matchedCount && modifiedCount) {

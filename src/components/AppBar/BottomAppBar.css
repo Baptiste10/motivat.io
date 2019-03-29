@@ -1,0 +1,13 @@
+searchButton {
+    margin-left: 12;
+    margin-right: 20;
+    display: flex;
+  }
+  mapButton {
+    margin-left: 200;
+    margin-right: 12;
+  }
+  toolbar {
+    align-items: center;
+    justify-content: space-between !important;
+  }

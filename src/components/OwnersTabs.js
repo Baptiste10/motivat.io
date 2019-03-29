@@ -40,7 +40,7 @@ class FullWidthTabs extends React.Component {
   };
 
   handleCardChange = (event, id) => {
-    this.props.db.updateClause(id, event.target.label, event.target.value)
+    this.props.db.updateClause(id, {[event.target.label]: [event.target.value]})
   };
 
 

@@ -1,49 +1,29 @@
 import React, { Component } from 'react';
 import './App.css';
-
-import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
 import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import PersistentDrawerRight from './components/PersistentDrawerRight'
 import MongoStitch from './StitchApp/MongoStitch'
 import PreviewButton from './components/PreviewButton'
-import BottomAppBar from './components/BottomAppBar'
+import BottomAppBar from './components/AppBar/BottomAppBar'
+import ImageGrid from './components/ImageGrid/ImageGrid'
 
 const drawerWidth = 400;
 
 const db = new MongoStitch();
 
 
-const styles = theme => ({
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-})
-
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      previewClicked:false,
       leftDrawerOpen: false,
       rightDrawerOpen: false,
       transcriptId: null,
       transcriptOwners: [],
       setSelectedTranscript: 'No transcript picked',
       transcriptList: [],
-      previewButtonEnabled: true
+      previewButtonEnabled: false
     };
 
   }
@@ -74,6 +54,13 @@ class App extends Component {
     this.setState({previewButtonEnabled: value})
   }
 
+  handlePreviewClick = () => {
+    this.setState({
+      previewClicked:true,
+      previewButtonEnabled:true
+    })
+  }
+
   handleLeftDrawerOpen = () => {
     this.setState({ leftDrawerOpen: true });
   };
@@ -93,7 +80,6 @@ class App extends Component {
   
   
   render() {
-    const { classes } = this.props; 
 
     let bottomAppBar =
     <BottomAppBar
@@ -126,24 +112,23 @@ class App extends Component {
       owners={this.state.transcriptOwners}
     />
 
+    let imageGrid;
+    if (this.state.previewClicked){
+      imageGrid = <ImageGrid/>
+    }
+
     
     
     return (
       <div className ='App'>
+        {imageGrid}
         {bottomAppBar}
         {mapPanel}
         {searchPanel}
-        <PreviewButton disabled={this.state.previewButtonEnabled}/>
-        <main
-          className={classNames(classes.content, {
-            [classes.contentShift]: this.state.leftDrawerOpen,
-          })}
-        >
-          <div className={classes.drawerHeader} />
-        </main>
+        <PreviewButton onClick={this.handlePreviewClick} disabled={this.state.previewButtonEnabled}/>
       </div>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(App);
+export default App;

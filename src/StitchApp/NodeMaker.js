@@ -56,7 +56,7 @@ module.exports = {
         subtype: clause['subtype'],
         subject: clause['subject'],
         tense: clause['tense'],
-        sentiment: clause['sentiment']['mood'],
+        sentiment: clause['sentiment'],
         tags: clause['tags']
       },
       fav: false

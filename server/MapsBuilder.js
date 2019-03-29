@@ -37,7 +37,7 @@ async function keywordMap (transcriptId, ownersId, keyword, reverse=false) {
                 edges.push(createEdge(answer, question, mapId));
             }
         }
-    }
+    }else{console.log("Something went wrong")}
 }
 
 

@@ -9,7 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import SimpleDialogDemo from './ChooseOption/SimpleDialog'
+import SimpleDialogDemo from '../ChooseOption/SimpleDialog'
+import styled from 'styled-components';
+import './BottomAppBar.css'
 
 const drawerWidth = 400;
 
@@ -29,14 +31,7 @@ const styles = theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    searchButton: {
-      marginLeft: 12,
-      marginRight: 20,
-    },
-    mapButton: {
-      marginLeft: 200,
-      marginRight: 12,
-    },
+    
     hide: {
       display: 'none',
     },
@@ -45,6 +40,11 @@ const styles = theme => ({
     justifyContent: 'space-between',
   },
 }});
+
+const StyledToolbar = styled(Toolbar)`
+  align-items: center;
+  justify-content: space-between;
+`;
 
 class BottomAppBar extends React.Component {
 
@@ -89,18 +89,15 @@ class BottomAppBar extends React.Component {
             [classes.appBarShift]: leftOpen,
           })}
         >
-          <Toolbar className={classes.toolbar} disableGutters={!leftOpen || !rightOpen}>
-            <IconButton 
-              color="inherit"
-              aria-label="Open Left drawer"
-              onClick={this.handleLeftDrawerOpen}
-              className={classNames(classes.searchButton, leftOpen && classes.hide)}
-            >
-              <SearchIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              Motivat.io
-            </Typography>
+          <StyledToolbar className="toolbar" disableGutters={!leftOpen || !rightOpen}>
+              <IconButton 
+                color="inherit"
+                aria-label="Open Left drawer"
+                onClick={this.handleLeftDrawerOpen}
+                className={classNames(classes.searchButton, leftOpen && classes.hide)}
+              >
+                <SearchIcon />
+              </IconButton>
             {transcriptDialog}
             <div>
               <IconButton 
@@ -112,7 +109,7 @@ class BottomAppBar extends React.Component {
                 <MenuIcon />
               </IconButton>
             </div>
-          </Toolbar>
+          </StyledToolbar>
         </AppBar>
       </React.Fragment>
     );

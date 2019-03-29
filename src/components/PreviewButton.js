@@ -17,7 +17,13 @@ function PreviewButton(props) {
     const { classes } = props;
     return (
       <div>
-        <Button variant="outlined" disabled={props.disabled} color="secondary" className={classes.button}>
+        <Button 
+          variant="outlined" 
+          disabled={props.disabled} 
+          color="secondary" 
+          className={classes.button}
+          onClick={props.onClick}
+        >
             Preview Map
         </Button>
       </div>

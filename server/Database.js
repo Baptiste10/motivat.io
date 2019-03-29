@@ -3,20 +3,25 @@ const ObjectId = require('mongodb').ObjectID
 
 
 module.exports = {
-  queryAtlas: function (collectionName, query){
+  queryAtlas: async function (collectionName, query){
     // Connect to Atlas
     const uri = "mongodb+srv://sgbaudid:vAGdpBKsEx7a9O7z@motivatio-vbs7j.mongodb.net/admin?retryWrites=true";
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    client.connect(err => {
+    
+    let result = null;
+
+    await client.connect(async err => {
       var dbo = client.db("mydatabase");
       const collection = dbo.collection(collectionName);
-      collection.find(query).toArray(function(err, result) {
+      await collection.find(query).toArray(function(err, res) {
         if (err) throw err;
-        console.log("The query returned the following documents:"+result)
         client.close();
-        return result
+        console.log("The query returned the following documents:"+res)
+        result = res;
       });
     });
+
+    return result;
   },
 
   insertAtlas: function (collectionName, objArray){

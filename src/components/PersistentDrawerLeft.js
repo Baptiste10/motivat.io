@@ -136,11 +136,11 @@ class PersistentDrawerLeft extends React.Component {
     if(text[text.length -1]==="."){
       text = text.replace('/.','');
       this.db.searchHandler(text, this.props.transcriptId, this.state.activeOwnerId).then(result =>{
-        if(typeof result !== 'undefined' && result.length > 0){
-          this.setState({
-            clientSentenceList: result[0],
-            coachSentenceList: result[1]
-          });
+        if(typeof result[1] !== 'undefined' && result[1].length > 0){
+          this.setState({coachSentenceList: result[1]});
+        }
+        if(typeof result[0] !== 'undefined' && result[0].length > 0){
+          this.setState({clientSentenceList: result[0]});
         }
       });
     }

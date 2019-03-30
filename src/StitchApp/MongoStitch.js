@@ -81,6 +81,7 @@ class MongoStitch {
     let result;
     let clauseId;
     let endSearch;
+    let dominantSubtype;
     for (let i = 0; i < precision; i++){
       listOfClauses = []
       endSearch = initSearch+turnsPerCard;
@@ -91,26 +92,31 @@ class MongoStitch {
             '$and': [{
                     'turn': {'$gt': initSearch}}, {
                     'turn': {'$lt': endSearch}}], 
-            'subtype': {'$nin': ['Nothing']}}}
+            'subtype': {$nin: ['Nothing']}}}
       group = {$group: {_id: '$subtype', count: {'$sum': 1},clauses: {'$push': '$_id'}}}
       sort = {$sort: {count: -1}}
       let query = [match, group, sort]
       result = await this.Clauses.aggregate(query).asArray();
+
       if(result.length > 0) {
-        console.log(`Successfully found document: `,result)
-        for (clauseId of result[0]['clauses']){
+        dominantSubtype = result[1]['_id'];
+        console.log(`Successfully found document: `,dominantSubtype)
+
+        for (clauseId of result[1]['clauses']){
           clauseDoc = await this.findInDb(this.Clauses, {_id: clauseId})
-          clauseNode = await createClauseNode(clauseDoc);
+          clauseNode = await createClauseNode(clauseDoc[0]);
+          console.log(`A node: `,clauseNode)
           listOfClauses.push(clauseNode);
         }
-        sequenceResult = {subtype:result[0]['_id'], nodes:listOfClauses}
+
+        sequenceResult = {"subtype":dominantSubtype, "nodes":listOfClauses}
         listOfSubtypes.push(sequenceResult)
         initSearch = initSearch+turnsPerCard;
       } else {
         console.log("No document matches the provided query: ", query)
       }
     }
-    console.log('listOfSubtypes:'+listOfSubtypes)
+    console.log(`listOfSubtypes:`,listOfSubtypes)
     if (listOfSubtypes){
       return listOfSubtypes;
     }else{
@@ -249,7 +255,7 @@ class MongoStitch {
     match.transcript = ObjectId(transcriptId);
     //match.owner = ObjectId(ownerId);
     //Make sure we don't get the useless statements
-    match.subtype = {$nin: ["Nothing"]}
+    match.subtype = {$ne: ["Nothing"]}
 
     // ------------- Extract hashtags -------------
     
@@ -353,17 +359,5 @@ class MongoStitch {
   };
 
 }
-
-function unique(arr) {
-  var hash = {}, result = [];
-  for ( var i = 0, l = arr.length; i < l; ++i ) {
-      if ( !hash.hasOwnProperty(arr[i]) ) { //it works with objects! in FF, at least
-          hash[ arr[i] ] = true;
-          result.push(arr[i]);
-      }
-  }
-  return result;
-}
-
 
 export default MongoStitch;

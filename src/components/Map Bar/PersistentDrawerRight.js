@@ -13,8 +13,8 @@ import SimpleSelect from './SimpleSelect'
 import PrecisionSelect from './PrecisionSelect'
 import OwnerSelect from './OwnerSelect'
 import KeywordSelect from './KeywordSelect'
-import NestedTree from './NestedTree/NestedTree'
-import SubtypeCard from './SubtypeCard'
+import NestedTree from '../NestedTree/NestedTree'
+import SubtypeCards from './SubtypeCards'
 
 
 const drawerWidth = 400;
@@ -120,8 +120,16 @@ class PersistentDrawerRight extends React.Component {
       this.setState({
         selectedPOV: '',
         clientKeyword: '',
-        coachKeyword: ''
+        coachKeyword: '',
+        subtypeList: null
       })
+    }
+    if (event.target.name==="selectedPrecision"){
+      this.props.db.miMap(this.props.transcriptId, this.props.owners[0][0], event.target.value).then(
+        subtypesList =>{
+          this.setState({subtypeList: subtypesList})
+        }
+      );
     }
   };
 
@@ -141,14 +149,17 @@ class PersistentDrawerRight extends React.Component {
   render() {
     const { classes, theme, open } = this.props;
 
+    //Render Map selector Button
     let mapSelector = 
     <SimpleSelect
       handleSelectChange={this.handleSelectChange}
       selectedMap={this.state.selectedMap}
     />
 
+    //Render the Precision Button selector
     let precisionSelector;
-    if (this.state.selectedMap==='MI Map'){
+    //Only if user picked the MI Map
+    if (this.state.selectedMap === 'MI Map') {
       precisionSelector = 
       <PrecisionSelect
         selectedPrecision={this.state.selectedPrecision}
@@ -156,24 +167,23 @@ class PersistentDrawerRight extends React.Component {
       />
     }
 
+    // Render a list of Subtype Cards 
     let miList;
-    if (this.state.selectedPrecision!==''){
-      this.props.db.miMap(this.props.transcriptId, this.props.owners[0][0], this.state.selectedPrecision).then(subtypesList =>{
-        console.log('Drawer gets'+subtypesList[0].nodes[0][0])
-        miList = 
-          <ul>
-              {subtypesList.map(
-                (subtype) =>
-                  <SubtypeCard 
-                    key={subtype.subtype.toString()}
-                    content={subtype.nodes}
-                  />
-                )}
-            </ul>
-      });
+    if (this.state.subtypeList !== null && this.state.subtypeList !== undefined){
+       miList = (<ul>
+          {this.state.subtypeList.map(
+            (subtype) =>
+              <SubtypeCards 
+                key={subtype.subtype.toString()}
+                content={subtype}
+              />
+            )}
+        </ul>);
     }
 
+    // Render the owner selector
     let ownerSelector;
+    //Only if the map chosen is the Keyword Map
     if (this.state.selectedMap==='Keyword Map'){
       ownerSelector=
       <OwnerSelect
@@ -183,7 +193,9 @@ class PersistentDrawerRight extends React.Component {
       />
     }
 
+    //Render the keyword selector
     let keywordSelector;
+    //Only if the Keyword Map were selected
     if (this.state.selectedMap==='Keyword Map'){
       keywordSelector=
       <KeywordSelect
@@ -196,7 +208,9 @@ class PersistentDrawerRight extends React.Component {
       />
     }
 
+    //Render a nested tree
     let nestedTree;
+    //Only if a POV and at least one keyword had been selected
     if (this.state.selectedPOV !=='' && (this.state.clientKeyword !=='' || this.state.coachKeyword !== '')){
       nestedTree = <NestedTree
         previewButton={this.handlePreviewButton}
@@ -231,7 +245,7 @@ class PersistentDrawerRight extends React.Component {
           {ownerSelector}
           {nestedTree}
           
-        </Drawer>
+          </Drawer>
         <main
           className={classNames(classes.content, {
             [classes.contentShift]: open,

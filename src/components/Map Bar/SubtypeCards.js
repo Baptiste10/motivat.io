@@ -10,12 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import SentenceCard from './SentenceCard'
+import SentenceCard from '../Search Bar/SentenceCard'
 
 const styles = theme => ({
   card: {
     width: "100%",
-    margin: '16px auto',
+    margin: theme.spacing.unit,
   },
   actions: {
     display: 'flex',
@@ -33,19 +33,17 @@ const styles = theme => ({
 });
 
 class SubtypeCard extends React.Component {
-  state = { expanded: false };
+  state = { 
+    expanded: false
+  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
-  handleCardChange = (event, id) => {
-    this.props.handleCardChange(event, id)
-  }
-
   render() {
     const { classes } = this.props;
-    console.log('in the SubCard')
+    console.log(`in the SubCard with: `, this.props.content)
 
     return (
       <Card className={classes.card}>
@@ -69,12 +67,11 @@ class SubtypeCard extends React.Component {
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <ul>
-              {this.props.content.clauses.map(
+              {this.props.content.nodes.map(
                 (clauseNode) =>
                   <SentenceCard 
                     key={clauseNode.id.toString()}
                     clause={clauseNode}
-                    handleCardChange={this.props.handleCardChange}
                   />
               )}
             </ul>

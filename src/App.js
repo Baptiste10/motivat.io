@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import PersistentDrawerLeft from './components/PersistentDrawerLeft'
-import PersistentDrawerRight from './components/PersistentDrawerRight'
+import PersistentDrawerLeft from './components/Search Bar/PersistentDrawerLeft'
+import PersistentDrawerRight from './components/Map Bar/PersistentDrawerRight'
 import MongoStitch from './StitchApp/MongoStitch'
-import PreviewButton from './components/PreviewButton'
+import PreviewButton from './components/AppBar/PreviewButton'
 import BottomAppBar from './components/AppBar/BottomAppBar'
 import ImageGrid from './components/ImageGrid/ImageGrid'
-
-const drawerWidth = 400;
 
 const db = new MongoStitch();
 

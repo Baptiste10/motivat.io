@@ -10,9 +10,11 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import SimpleSelect from './SimpleSelect'
+import PrecisionSelect from './PrecisionSelect'
 import OwnerSelect from './OwnerSelect'
 import KeywordSelect from './KeywordSelect'
 import NestedTree from './NestedTree/NestedTree'
+import SubtypeCard from './SubtypeCard'
 
 
 const drawerWidth = 400;
@@ -105,6 +107,7 @@ class PersistentDrawerRight extends React.Component {
     this.state = {
       selectedMap: '',
       selectedPOV: '',
+      selectedPrecision: '',
       clientKeyword: '',
       coachKeyword: '',
       name: 'hai'
@@ -143,6 +146,32 @@ class PersistentDrawerRight extends React.Component {
       handleSelectChange={this.handleSelectChange}
       selectedMap={this.state.selectedMap}
     />
+
+    let precisionSelector;
+    if (this.state.selectedMap==='MI Map'){
+      precisionSelector = 
+      <PrecisionSelect
+        selectedPrecision={this.state.selectedPrecision}
+        handleSelectChange={this.handleSelectChange}
+      />
+    }
+
+    let miList;
+    if (this.state.selectedPrecision!==''){
+      this.props.db.miMap(this.props.transcriptId, this.props.owners[0][0], this.state.selectedPrecision).then(subtypesList =>{
+        console.log('Drawer gets'+subtypesList[0].nodes[0][0])
+        miList = 
+          <ul>
+              {subtypesList.map(
+                (subtype) =>
+                  <SubtypeCard 
+                    key={subtype.subtype.toString()}
+                    content={subtype.nodes}
+                  />
+                )}
+            </ul>
+      });
+    }
 
     let ownerSelector;
     if (this.state.selectedMap==='Keyword Map'){
@@ -196,6 +225,8 @@ class PersistentDrawerRight extends React.Component {
           </div>
           
           {mapSelector}
+          {precisionSelector}
+          {miList}
           {keywordSelector}
           {ownerSelector}
           {nestedTree}

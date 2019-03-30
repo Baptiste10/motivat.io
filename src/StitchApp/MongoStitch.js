@@ -65,9 +65,62 @@ class MongoStitch {
       }
   };
 
-  updateClause = function (clauseId, update){
+  miMap = async function (transcriptId, ownerId, precision){
+    let numberOfTurns = await this.Sentences.findOne({transcript:ObjectId(transcriptId), owner:ownerId},{"projection":{turn:1, _id:0}, "sort":{turn:-1}});
+    numberOfTurns = numberOfTurns['turn']
+    const turnsPerCard = Math.floor(numberOfTurns/precision);
+    let match;
+    let group;
+    let sort;
+    let initSearch=1;
+    let sequenceResult;
+    let listOfSubtypes = [];
+    let clauseNode;
+    let listOfClauses;
+    let clauseDoc;
+    let result;
+    let clauseId;
+    let endSearch;
+    for (let i = 0; i < precision; i++){
+      listOfClauses = []
+      endSearch = initSearch+turnsPerCard;
+      match = {
+        '$match': {
+            'owner': ownerId, 
+            'transcript': ObjectId(transcriptId), 
+            '$and': [{
+                    'turn': {'$gt': initSearch}}, {
+                    'turn': {'$lt': endSearch}}], 
+            'subtype': {'$nin': ['Nothing']}}}
+      group = {$group: {_id: '$subtype', count: {'$sum': 1},clauses: {'$push': '$_id'}}}
+      sort = {$sort: {count: -1}}
+      let query = [match, group, sort]
+      result = await this.Clauses.aggregate(query).asArray();
+      if(result.length > 0) {
+        console.log(`Successfully found document: `,result)
+        for (clauseId of result[0]['clauses']){
+          clauseDoc = await this.findInDb(this.Clauses, {_id: clauseId})
+          clauseNode = await createClauseNode(clauseDoc);
+          listOfClauses.push(clauseNode);
+        }
+        sequenceResult = {subtype:result[0]['_id'], nodes:listOfClauses}
+        listOfSubtypes.push(sequenceResult)
+        initSearch = initSearch+turnsPerCard;
+      } else {
+        console.log("No document matches the provided query: ", query)
+      }
+    }
+    console.log('listOfSubtypes:'+listOfSubtypes)
+    if (listOfSubtypes){
+      return listOfSubtypes;
+    }else{
+      return null;
+    }
+  };
+
+  updateClause = function (clauseId, updatedField){
     const query = { "_id": ObjectId(clauseId) };
-    const update = update;
+    const update = updatedField;
 
     this.Clauses.updateOne(query, update)
       .then(result => {
@@ -196,7 +249,7 @@ class MongoStitch {
     match.transcript = ObjectId(transcriptId);
     //match.owner = ObjectId(ownerId);
     //Make sure we don't get the useless statements
-    //match.subtype = {$ne: "Nothing"}
+    match.subtype = {$nin: ["Nothing"]}
 
     // ------------- Extract hashtags -------------
     
@@ -234,9 +287,9 @@ class MongoStitch {
             match.subtype = hashtag;
             continue;
           }
-          if (hashtag === 'Open' || hashtag === 'Close' || hashtag === 'Affirmation'){
+          if (hashtag === 'Open' || hashtag === 'Closed' || hashtag === 'Affirmation'){
             // return sentences with the mentionned tense
-            if(hashtag==='Open' || hashtag === 'Close'){hashtag = hashtag+" Question"}
+            if(hashtag==='Open' || hashtag === 'Closed'){hashtag = hashtag+" Question"}
             match.type = hashtag;
             continue;
           }

@@ -23,7 +23,7 @@ class App extends Component {
       transcriptOwners: [],
       setSelectedTranscript: 'No transcript picked',
       transcriptList: [],
-      previewButtonEnabled: false
+      previewButtonEnabled: true
     };
 
   }

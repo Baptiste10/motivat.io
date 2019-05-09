@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import SimpleDialogDemo from '../ChooseOption/SimpleDialog'
+import SimpleDialogDemo from '../Map Bar/ChooseOption/SimpleDialog'
 import styled from 'styled-components';
 import './BottomAppBar.css'
 

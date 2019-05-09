@@ -5,7 +5,8 @@ import PersistentDrawerRight from './components/Map Bar/PersistentDrawerRight'
 import MongoStitch from './StitchApp/MongoStitch'
 import PreviewButton from './components/AppBar/PreviewButton'
 import BottomAppBar from './components/AppBar/BottomAppBar'
-import ImageGrid from './components/ImageGrid/ImageGrid'
+import SvgMap from './components/MainFrame/SvgMap'
+
 
 const db = new MongoStitch();
 
@@ -110,16 +111,16 @@ class App extends Component {
       owners={this.state.transcriptOwners}
     />
 
-    let imageGrid;
+    let svgMap;
+    svgMap = <SvgMap/>
     if (this.state.previewClicked){
-      imageGrid = <ImageGrid/>
+      svgMap = <SvgMap/>
     }
 
     
     
     return (
       <div className ='App'>
-        {imageGrid}
         {bottomAppBar}
         {mapPanel}
         {searchPanel}

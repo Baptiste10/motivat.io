@@ -65,6 +65,79 @@ class MongoStitch {
       }
   };
 
+  cbtMap = async function (transcriptId, ownerId){
+    let query;
+    let options;
+    let sentenceDoc;
+    let sentenceNode;
+    let listOfSentenceNodes; 
+    let sentenceId;
+    let cbtNodesList;
+
+    //Get the sentences with clauses tag as Taking Step
+    query = {
+      'transcript': new ObjectId(transcriptId), 
+      'owner': new ObjectId(ownerId), 
+      'subtype': "taking step"
+    };
+    options = {"projection": {sentence: 1, _id: 0}};
+    const takingStepId = await this.findInDb(this.Clauses, query, options);
+
+    if(takingStepId.length > 0) {
+      for (sentenceId of takingStepId){
+        sentenceDoc = await this.findInDb(this.Sentences, {_id: sentenceId});
+        sentenceNode = await createSentenceNode(sentenceDoc);
+        listOfSentenceNodes.push(sentenceNode);
+      }
+      cbtNodesList.push(listOfSentenceNodes)
+      listOfSentenceNodes = [];
+    }
+    //Get the sentences with clauses tag as a Reason
+    query = {
+      'transcript': new ObjectId(transcriptId), 
+      'owner': new ObjectId(ownerId), 
+      'subtype': "reason"
+    };
+    options = {"projection": {sentence: 1, _id: 0}};
+    const reasonId = await this.findInDb(this.Clauses, query, options);
+
+    if(reasonId.length > 0) {
+      for (sentenceId of reasonId){
+        sentenceDoc = await this.findInDb(this.Sentences, {_id: sentenceId});
+        sentenceNode = await createSentenceNode(sentenceDoc);
+        listOfSentenceNodes.push(sentenceNode);
+      }
+      cbtNodesList.push(listOfSentenceNodes)
+      listOfSentenceNodes = [];
+    }
+    //Get the sentences with clauses tag as a Desire
+    query = {
+      'transcript': new ObjectId(transcriptId), 
+      'owner': new ObjectId(ownerId), 
+      'subtype': "desire"
+    };
+    options = {"projection": {sentence: 1, _id: 0}};
+    const desireId = await this.findInDb(this.Clauses, query, options);
+
+    if(desireId.length > 0) {
+      for (sentenceId of desireId){
+        sentenceDoc = await this.findInDb(this.Sentences, {_id: sentenceId});
+        sentenceNode = await createSentenceNode(sentenceDoc);
+        listOfSentenceNodes.push(sentenceNode);
+      }
+      cbtNodesList.push(listOfSentenceNodes)
+      listOfSentenceNodes = [];
+    }
+
+    console.log(`cbtNodesList:`,cbtNodesList)
+    if (cbtNodesList){
+      return cbtNodesList;
+    }else{
+      return null;
+    }
+
+  }
+
   miMap = async function (transcriptId, ownerId, precision){
     let numberOfTurns = await this.Sentences.findOne({transcript:ObjectId(transcriptId), owner:ownerId},{"projection":{turn:1, _id:0}, "sort":{turn:-1}});
     numberOfTurns = numberOfTurns['turn']
